@@ -38,6 +38,20 @@ export const PageTitle = styled.Text`
     font-size: 30px;
     text-align: center;
     font-weight: bold;
-    color: ${brand};
+    color: ${green};
     padding: 10px;
+`
+
+// Note that I am using styled-component
+export const DarkenImg = styled.View`
+  flex: 1;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+`
+
+export const ButtonContainer = styled.View`
+    flex: 1;
+    background-color: ${primary};
 `

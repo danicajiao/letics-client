@@ -1,12 +1,15 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, Image, StyleSheet, Text, View } from 'react-native';
+import styled from 'styled-components';
 
-// import {
-//     StyledContainer,
-//     InnerContainer,
-//     PageLogo,
-//     PageTitle
-// } from './../components/styles';
+import {
+    StyledContainer,
+    InnerContainer,
+    PageLogo,
+    PageTitle,
+    DarkenImg,
+    ButtonContainer
+} from './../components/styles';
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
@@ -14,10 +17,16 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <Text style={styles.text}>Logo Placeholder</Text>
-
+                <DarkenImg>
+                    <Image style={styles.logo} source={require('./../assets/img/logo.png')} />
+                </DarkenImg>
+                {/* <Text style={styles.text}>Logo Placeholder</Text> */}
             </ImageBackground>
+            {/* <ButtonContainer>
+
+            </ButtonContainer> */}
         </View>
+
         // <StyledContainer>
         //     <InnerContainer>
         //         <PageLogo resizeMode="cover" source={require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg')} />
@@ -29,19 +38,16 @@ const Login = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     image: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center",
     },
-    text: {
-        color: "white",
-        fontSize: 42,
-        lineHeight: 84,
-        fontWeight: "bold",
-        textAlign: "center",
-        backgroundColor: "#000000c0"
+    logo: {
+        width: 250,
+        resizeMode: "contain"
     }
 });
 
