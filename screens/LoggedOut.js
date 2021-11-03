@@ -3,11 +3,11 @@ import { ImageBackground, Image, StyleSheet, Text, View, TouchableOpacity, Alert
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
-import { CustomButton } from './../components/CustomButton'
+import { CustomButton } from '../components/CustomButton'
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
-const Login = () => {
+const LoggedOut = () => {
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default LoggedOut;
