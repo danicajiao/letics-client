@@ -4,23 +4,13 @@ import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
 
-import {
-    StyledFormArea,
-    StyledTextInput,
-    StyledInputLabel,
-    LeftIcon,
-    RightIcon,
-    Colors
-} from './../components/styles';
-
+import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
-
-const { brand, darkLight } = Colors;
+import { CustomButton } from './../components/CustomButton';
 
 const Register = () => {
     return (
         <View style={styles.container}>
-            {/* <Text style={styles.header}>Register</Text> */}
             <Header title={'Register'} />
             <Formik
                 initialValues={{ email: '', password: '' }}
@@ -34,7 +24,7 @@ const Register = () => {
                             label='Email Address'
                             icon='mail'
                             placeholder='andyj@gmail.com'
-                            placeholderTextColor={darkLight}
+                            placeholderTextColor={Colors.darkLight}
                             onChangeText={handleChange('email')}
                             onBlur={handleBlur('email')}
                             value={values.email}
@@ -44,7 +34,7 @@ const Register = () => {
                             label='Password'
                             icon='lock'
                             placeholder='**********'
-                            placeholderTextColor={darkLight}
+                            placeholderTextColor={Colors.darkLight}
                             onChangeText={handleChange('password')}
                             onBlur={handleBlur('password')}
                             value={values.password}
@@ -54,6 +44,7 @@ const Register = () => {
                 )
                 }
             </Formik >
+            <CustomButton text={'Test'} />
         </View >
     );
 };
@@ -62,10 +53,10 @@ const MyTextInput = ({ label, icon, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
-                <Octicons name={icon} size={30} color={darkLight} />
+                <Octicons name={icon} size={30} color={Colors.darkLight} />
             </View>
-            <StyledInputLabel>{label}</StyledInputLabel>
-            <StyledTextInput {...props} />
+            <Text style={styles.inputLabel}>{label}</Text>
+            <TextInput style={styles.textInput} {...props} />
         </View>
     );
 };
@@ -94,6 +85,23 @@ const styles = StyleSheet.create({
         top: 35,
         position: 'absolute',
         zIndex: 1
+    },
+    inputLabel: {
+        color: Colors.tertiary,
+        fontSize: 13,
+        textAlign: 'left'
+    },
+    textInput: {
+        backgroundColor: Colors.secondary,
+        padding: 15,
+        paddingLeft: 55,
+        paddingRight: 55,
+        borderRadius: 5,
+        fontSize: 16,
+        height: 60,
+        marginVertical: 3,
+        marginBottom: 10,
+        color: Colors.tertiary,
     }
 });
 

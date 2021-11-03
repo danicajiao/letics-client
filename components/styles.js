@@ -1,3 +1,5 @@
+// This file is just me messing around with styled-components. The majority of the components used in the app are the native equivalents of these.
+
 import styled from "styled-components";
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import Constants from 'expo-constants';
