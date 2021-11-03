@@ -1,22 +1,17 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text } from 'react-native';
 
-// create a component
-export class Header extends Component {
-    render() {
-        return (
-            <Text {...this.props.title} style={styles.header}>{this.props.title}</Text>
-        );
-    }
+// Create a component
+export const Header = (props) => {
+    return (
+        <Text {...props.title} style={styles.header}>{props.title}</Text>
+    );
 }
-
 
 const styles = StyleSheet.create({
     header: {
         fontSize: 40,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingLeft: 20
     }
 });
-
-//make this component available to the app
-export default Header;

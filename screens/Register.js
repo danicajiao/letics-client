@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -8,21 +8,31 @@ import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { CustomButton } from './../components/CustomButton';
 
-const Login = () => {
+const Register = () => {
     return (
         <View style={styles.container}>
-            <Header title={'Log In'} />
+            <Header title={'Register'} />
             <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
                 <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
             </TouchableOpacity>
             <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ username: '', email: '', password: '' }}
                 onSubmit={(values) => {
                     console.log(values);
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
                     <View style={styles.forms}>
+                        <MyTextInput
+                            label='Username'
+                            icon='mention'
+                            placeholder='andyj'
+                            placeholderTextColor={Colors.darkLight}
+                            onChangeText={handleChange('username')}
+                            onBlur={handleBlur('username')}
+                            value={values.username}
+                            keyboardType='default'
+                        />
                         <MyTextInput
                             label='Email Address'
                             icon='mail'
@@ -44,7 +54,7 @@ const Login = () => {
                             keyboardType="default"
                         />
                         <CustomButton
-                            text={'LOG IN'}
+                            text={'SIGN UP'}
                             buttonStyles={styles.button}
                             textStyles={styles.buttonText}
                         />
@@ -60,7 +70,7 @@ const MyTextInput = ({ label, icon, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
-                <Octicons name={icon} size={24} color={Colors.darkLight} />
+                <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
             <Text style={styles.inputLabel}>{label}</Text>
             <TextInput style={styles.textInput} {...props} />
@@ -113,7 +123,7 @@ const styles = StyleSheet.create({
         height: 60,
         marginVertical: 3,
         marginBottom: 10,
-        color: Colors.tertiary,
+        color: Colors.tertiary
     },
     button: {
         backgroundColor: '#000000',
@@ -124,4 +134,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default Register;
