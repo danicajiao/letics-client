@@ -3,14 +3,7 @@ import { ImageBackground, Image, StyleSheet, Text, View, TouchableOpacity, Alert
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
-import {
-    StyledContainer,
-    InnerContainer,
-    PageLogo,
-    PageTitle,
-    DarkenImg,
-    ButtonContainer
-} from './../components/styles';
+import { CustomButton } from './../components/CustomButton'
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
@@ -23,12 +16,14 @@ const Login = () => {
                     <Image style={styles.logo} source={require('./../assets/img/logo.png')} />
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => Alert.alert('Log In button pressed')}>
+                    <CustomButton text={'LOG IN'} />
+                    <CustomButton text={'REGISTER'} passedStyle={styles.registerButton} />
+                    {/* <TouchableOpacity style={styles.loginButton} onPress={() => Alert.alert('Log In button pressed')}>
                         <Text style={styles.textStyle1}>LOG IN</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.registerButton} onPress={() => Alert.alert('Register button pressed')}>
                         <Text style={styles.textStyle1}>REGISTER</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </ImageBackground>
         </View>
@@ -61,23 +56,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 10
     },
-    loginButton: {
-        alignItems: "center",
-        borderWidth: 2,
-        paddingVertical: 20,
-        paddingHorizontal: 60,
-        borderRadius: 5
-    },
     registerButton: {
-        alignItems: "center",
-        backgroundColor: "#FFB800",
-        borderWidth: 2,
-        paddingVertical: 20,
-        paddingHorizontal: 60,
-        borderRadius: 5
-    },
-    textStyle1: {
-        fontWeight: "bold"
+        backgroundColor: "#FFB800"
     }
 });
 
