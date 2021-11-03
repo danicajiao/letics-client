@@ -29,7 +29,7 @@ const Register = () => {
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
-                    <View style={styles.formArea}>
+                    <View style={styles.forms}>
                         <MyTextInput
                             label='Email Address'
                             icon='mail'
@@ -51,15 +51,16 @@ const Register = () => {
                             keyboardType="default"
                         />
                     </View>
-                )}
-            </Formik>
-        </View>
+                )
+                }
+            </Formik >
+        </View >
     );
 };
 
 const MyTextInput = ({ label, icon, ...props }) => {
     return (
-        <View>
+        <View style={styles.formArea}>
             <View style={styles.leftIcon}>
                 <Octicons name={icon} size={30} color={darkLight} />
             </View>
@@ -80,12 +81,17 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold'
     },
+    forms: {
+        flex: 1,
+        paddingTop: 20,
+        alignItems: 'center'
+    },
     formArea: {
-        width: "90%"
+        width: "90%",
     },
     leftIcon: {
         left: 15,
-        top: 38,
+        top: 35,
         position: 'absolute',
         zIndex: 1
     }
