@@ -12,6 +12,9 @@ const Register = () => {
     return (
         <View style={styles.container}>
             <Header title={'Register'} />
+            <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
+                <Octicons name={'arrow-left'} size={30} style={styles.backIcon} />
+            </TouchableOpacity>
             <Formik
                 initialValues={{ username: '', email: '', password: '' }}
                 onSubmit={(values) => {
@@ -85,6 +88,10 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 40,
         fontWeight: 'bold'
+    },
+    backIcon: {
+        paddingLeft: 20,
+        paddingTop: 20
     },
     forms: {
         flex: 1,
