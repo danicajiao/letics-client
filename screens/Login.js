@@ -17,7 +17,11 @@ const Login = () => {
                 </View>
                 <View style={styles.buttons}>
                     <CustomButton text={'LOG IN'} />
-                    <CustomButton text={'REGISTER'} passedStyle={styles.registerButton} />
+                    <CustomButton
+                        text={'REGISTER'}
+                        buttonStyles={styles.registerButton}
+                        textStyles={styles.registerText}
+                    />
                     {/* <TouchableOpacity style={styles.loginButton} onPress={() => Alert.alert('Log In button pressed')}>
                         <Text style={styles.textStyle1}>LOG IN</Text>
                     </TouchableOpacity>
@@ -57,7 +61,11 @@ const styles = StyleSheet.create({
         paddingBottom: 10
     },
     registerButton: {
-        backgroundColor: "#FFB800"
+        backgroundColor: "#FFB800",
+        borderColor: "#FFB800"
+    },
+    registerText: {
+        color: '#ffffff'
     }
 });
 
