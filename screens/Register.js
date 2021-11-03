@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ const Register = () => {
         <View style={styles.container}>
             <Header title={'Register'} />
             <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
-                <Octicons name={'arrow-left'} size={30} style={styles.backIcon} />
+                <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
             </TouchableOpacity>
             <Formik
                 initialValues={{ username: '', email: '', password: '' }}
@@ -70,7 +70,7 @@ const MyTextInput = ({ label, icon, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
-                <Octicons name={icon} size={30} color={Colors.darkLight} />
+                <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
             <Text style={styles.inputLabel}>{label}</Text>
             <TextInput style={styles.textInput} {...props} />
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
         left: 15,
         top: 35,
         position: 'absolute',
-        zIndex: 1
+        zIndex: 1,
+        elevation: (Platform.OS === 'android') ? 50 : 0
     },
     inputLabel: {
         color: Colors.tertiary,
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
         height: 60,
         marginVertical: 3,
         marginBottom: 10,
-        color: Colors.tertiary,
+        color: Colors.tertiary
     },
     button: {
         backgroundColor: '#000000',

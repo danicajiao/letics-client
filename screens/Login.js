@@ -13,7 +13,7 @@ const Login = () => {
         <View style={styles.container}>
             <Header title={'Log In'} />
             <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
-                <Octicons name={'arrow-left'} size={30} style={styles.backIcon} />
+                <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
             </TouchableOpacity>
             <Formik
                 initialValues={{ email: '', password: '' }}
@@ -60,7 +60,7 @@ const MyTextInput = ({ label, icon, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
-                <Octicons name={icon} size={30} color={Colors.darkLight} />
+                <Octicons name={icon} size={24} color={Colors.darkLight} />
             </View>
             <Text style={styles.inputLabel}>{label}</Text>
             <TextInput style={styles.textInput} {...props} />
@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
         left: 15,
         top: 35,
         position: 'absolute',
-        zIndex: 1
+        zIndex: 1,
+        elevation: (Platform.OS === 'android') ? 50 : 0
     },
     inputLabel: {
         color: Colors.tertiary,
