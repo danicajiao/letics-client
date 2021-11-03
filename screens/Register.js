@@ -13,13 +13,23 @@ const Register = () => {
         <View style={styles.container}>
             <Header title={'Register'} />
             <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ username: '', email: '', password: '' }}
                 onSubmit={(values) => {
                     console.log(values);
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
                     <View style={styles.forms}>
+                        <MyTextInput
+                            label='Username'
+                            icon='mention'
+                            placeholder='andyj'
+                            placeholderTextColor={Colors.darkLight}
+                            onChangeText={handleChange('username')}
+                            onBlur={handleBlur('username')}
+                            value={values.username}
+                            keyboardType='default'
+                        />
                         <MyTextInput
                             label='Email Address'
                             icon='mail'
@@ -41,7 +51,7 @@ const Register = () => {
                             keyboardType="default"
                         />
                         <CustomButton
-                            text={'NEXT'}
+                            text={'SIGN UP'}
                             buttonStyles={styles.button}
                             textStyles={styles.buttonText}
                         />
