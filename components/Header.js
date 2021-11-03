@@ -14,7 +14,8 @@ export class Header extends Component {
 const styles = StyleSheet.create({
     header: {
         fontSize: 40,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingLeft: 20
     }
 });
 
