@@ -40,11 +40,15 @@ const Register = () => {
                             value={values.password}
                             keyboardType="default"
                         />
+                        <CustomButton
+                            text={'NEXT'}
+                            buttonStyles={styles.button}
+                            textStyles={styles.buttonText}
+                        />
                     </View>
                 )
                 }
             </Formik >
-            <CustomButton text={'Test'} />
         </View >
     );
 };
@@ -102,6 +106,13 @@ const styles = StyleSheet.create({
         marginVertical: 3,
         marginBottom: 10,
         color: Colors.tertiary,
+    },
+    button: {
+        backgroundColor: '#000000',
+        width: '90%',
+    },
+    buttonText: {
+        color: '#ffffff'
     }
 });
 
