@@ -5,10 +5,10 @@ import { StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 export const CustomButton = (props) => {
     return (
         <TouchableOpacity
-            style={[styles.button, props.passedStyle]}
+            style={[styles.button, props.buttonStyles]}
             onPress={() => Alert.alert(props.text + ' button pressed')}
         >
-            <Text style={styles.textStyle}>{props.text}</Text>
+            <Text style={[styles.textStyle, props.textStyles]}>{props.text}</Text>
         </TouchableOpacity>
     );
 }
