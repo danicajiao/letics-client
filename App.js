@@ -9,11 +9,6 @@ import Workouts from './screens/Workouts';
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    //<Login />
-    <Workouts />
-=======
     <Register />
->>>>>>> a1c38d57fd6e19df6df1fedc64cf09abf6fa7f17
   );
 }
