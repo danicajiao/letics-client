@@ -1,44 +1,88 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Touchable} from 'react-native';
 
-function WorkoutLog(props) {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.cancelBtn}></TouchableOpacity>
-        <View style={styles.titlecontainer}>
-            <Text style={styles.title}>Workout for</Text>
-            <Text style={styles.title}>{currentDay()}</Text>
-        </View>
-        <View style={styles.exerciseList}>
-            <TouchableOpacity style={styles.exerciseBubble}>
-                <Text>Exercise 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.exerciseBubble}>
-                <Text>Exercise 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.exerciseBubble}>
-                <Text>Exercise 3</Text>
-            </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity style={styles.addBtn}>
-                <Text style={styles.addBtnText}>+ Add Exercise</Text>
-            </TouchableOpacity>
-        <TouchableOpacity style={styles.logBtn}>
-                <Text style={styles.addBtnText}>LOG Workout</Text>
-        </TouchableOpacity>
-        
+let workouts = [];
 
-      </View>
-    );
+function DisplayWorkouts() {
+    // console.log(sets.length);
+    const list = () => {
+        return workouts.map((exercise) => {
+          return (
+            <View key={exercise.number}>
+                <TouchableOpacity style={styles.exerciseBubble}>
+                    <Text>Exercise: {exercise.number}</Text>
+                </TouchableOpacity>
+            </View>
+          );
+        });
+      };
+    
+      return <View>{list()}</View>;
+}
+
+
+class WorkoutLog extends React.Component {
+
+    constructor() {
+        super();
+        // Define the initial state:
+        this.state = { count: 0 };
+    }
+
+    pushNewExercise = () => {
+        if (workouts.length < 3){
+
+            workouts.push(
+                {
+                   "number": workouts.length + 1,
+                }
+            )
+    
+            this.setState({count: (this.state.count + 1)});
+        }
+    }
+
+    render () {
+
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity style={styles.cancelBtn}></TouchableOpacity>
+            <View style={styles.titlecontainer}>
+                <Text style={styles.title}>Workout for</Text>
+                <Text style={styles.title}>{currentDay()}</Text>
+            </View>
+            <View style={styles.exerciseList}>
+                {/* <TouchableOpacity style={styles.exerciseBubble}>
+                    <Text>Exercise 1</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.exerciseBubble}>
+                    <Text>Exercise 2</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.exerciseBubble}>
+                    <Text>Exercise 3</Text>
+                </TouchableOpacity> */}
+                <DisplayWorkouts />
+            </View>
+    
+            <TouchableOpacity style={styles.addBtn} onPress={this.pushNewExercise}>
+                    <Text style={styles.addBtnText}>+ Add Exercise</Text>
+                </TouchableOpacity>
+            <TouchableOpacity style={styles.logBtn}>
+                    <Text style={styles.addBtnText}>LOG Workout</Text>
+            </TouchableOpacity>
+            
+    
+          </View>
+          );
+        }
 }
 
 function currentDay(){
     let date = new Date().getDate();
-    console.log()
     let month = new Date().getMonth() + 1;
     let year = new Date().getFullYear();
-    return date + ' / ' + month + ' / ' + year;
+    return month + ' / ' + date + ' / ' + year;
 }
 
 const styles = StyleSheet.create({

@@ -1,46 +1,84 @@
 import React from 'react';
+import { render } from 'react-dom';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import { DataTable } from 'react-native-paper';
 
-function LogExercise(props) {
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.cancelBtn}></TouchableOpacity>
-            <TouchableOpacity style={styles.notesBtn}></TouchableOpacity>
-            <Text style={styles.exerciseTitle}>Random Exercise</Text>
+let sets = [];
 
-            <View style={styles.tableComponent}>
-                <DataTable style={styles.table}>
-                    <DataTable.Header>
-                        <DataTable.Title>Set</DataTable.Title>
-                        <DataTable.Title>Weight</DataTable.Title>
-                        <DataTable.Title>Reps</DataTable.Title>
-                    </DataTable.Header>
-
-                    <DataTable.Row>
-                        <DataTable.Cell>Set 1</DataTable.Cell>
-                        <DataTable.Cell>155</DataTable.Cell>
-                        <DataTable.Cell>6</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell>Set 2</DataTable.Cell>
-                        <DataTable.Cell>175</DataTable.Cell>
-                        <DataTable.Cell>3</DataTable.Cell>
-                    </DataTable.Row>
-
-
-                </DataTable>
+function DisplaySets() {
+    console.log(sets.length);
+    const list = () => {
+        return sets.map((set) => {
+          return (
+            <View key={set.number}>
+                <DataTable.Row>
+                    <DataTable.Cell>{set.number}</DataTable.Cell>
+                    <DataTable.Cell>{set.weight}</DataTable.Cell>
+                    <DataTable.Cell>{set.reps}</DataTable.Cell>
+                </DataTable.Row>
             </View>
+          );
+        });
+      };
+    
+      return <View>{list()}</View>;
+}
 
-            <TouchableOpacity style={styles.addSetBtn}>
-                <Text style={styles.addBtnText}>+ Add Set</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.logBtn}>
-                <Text style={styles.addBtnText}>LOG</Text>
-            </TouchableOpacity>
+// this has the render() function, and this allows us to re-render the screen with new
+// sets if the user adds it.
+class LogExercise extends React.Component {
 
-        </View>
-    );
+    constructor() {
+        super();
+        // Define the initial state:
+        this.state = { count: 0 };
+    }
+
+    pushNewSet = () => {
+        if (sets.length < 3){
+            sets.push(
+                {
+                   "number": sets.length + 1,
+                   "weight": 0,
+                   "reps": 0
+                }
+            )
+    
+            this.setState({count: (this.state.count + 1)});
+
+        }
+    }
+
+    render () {
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.cancelBtn}></TouchableOpacity>
+                <TouchableOpacity style={styles.notesBtn}></TouchableOpacity>
+                <Text style={styles.exerciseTitle}>Random Exercise</Text>
+
+                <View style={styles.tableComponent}>
+                    <DataTable style={styles.table}>
+                        <DataTable.Header>
+                            <DataTable.Title>Set</DataTable.Title>
+                            <DataTable.Title>Weight</DataTable.Title>
+                            <DataTable.Title>Reps</DataTable.Title>
+                        </DataTable.Header>
+
+                        <DisplaySets />
+
+                    </DataTable>
+                </View>
+
+                <TouchableOpacity style={styles.addSetBtn} onPress={this.pushNewSet}>
+                    <Text style={styles.addBtnText}>+ Add Set</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.logBtn}>
+                    <Text style={styles.addBtnText}>LOG</Text>
+                </TouchableOpacity>
+
+            </View>
+        );
+}
 }
 
 const styles = StyleSheet.create({
@@ -73,7 +111,7 @@ const styles = StyleSheet.create({
         top: '20%',
         flex: 0.5,
         backgroundColor: '#fff',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     table: {
         width: '90%',
@@ -97,6 +135,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 200,
     },
-})
+});
 
 export default LogExercise;
