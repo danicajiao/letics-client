@@ -6,14 +6,13 @@ import LoggedOut from './screens/LoggedOut';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Workouts from './screens/Workouts';
+import LogExercise from './screens/LogExercise'
+import WorkoutLog from './screens/WorkoutLog'
 
 export default function App() {
   return (
-<<<<<<< HEAD
     //<Login />
-    <Workouts />
-=======
-    <Register />
->>>>>>> a1c38d57fd6e19df6df1fedc64cf09abf6fa7f17
+    <LogExercise />
+    // <Register />
   );
 }
