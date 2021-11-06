@@ -35,16 +35,18 @@ class LogExercise extends React.Component {
     }
 
     pushNewSet = () => {
-        console.log("Added set");
-        sets.push(
-            {
-               "number": sets.length + 1,
-               "weight": 0,
-               "reps": 0
-            }
-        )
+        if (sets.length < 3){
+            sets.push(
+                {
+                   "number": sets.length + 1,
+                   "weight": 0,
+                   "reps": 0
+                }
+            )
+    
+            this.setState({count: (this.state.count + 1)});
 
-        this.setState({count: (this.state.count + 1)});
+        }
     }
 
     render () {
