@@ -4,13 +4,22 @@ import {View, StyleSheet, Text, TouchableOpacity, Touchable} from 'react-native'
 
 let workouts = [];
 
-function DisplayWorkouts() {
+function DisplayWorkouts({popExercise}) {
     // console.log(sets.length);
     const list = () => {
         return workouts.map((exercise) => {
           return (
             <View key={exercise.number}>
-                <TouchableOpacity style={styles.exerciseBubble}>
+                <TouchableOpacity style={styles.exerciseBubble} onLongPress={() => {
+                    for (let index = 0; index < workouts.length; index++)
+                    {
+                        if (workouts[index].number === exercise.number)
+                        {
+                            popExercise(index);
+                            break;
+                        }
+                    }
+                }}>
                     <Text>Exercise: {exercise.number}</Text>
                 </TouchableOpacity>
             </View>
@@ -20,6 +29,7 @@ function DisplayWorkouts() {
     
       return <View>{list()}</View>;
 }
+
 
 
 class WorkoutLog extends React.Component {
@@ -32,15 +42,26 @@ class WorkoutLog extends React.Component {
 
     pushNewExercise = () => {
         if (workouts.length < 3){
-
             workouts.push(
                 {
-                   "number": workouts.length + 1,
+                   number: workouts.length + 1,
                 }
             )
-    
             this.setState({count: (this.state.count + 1)});
         }
+    }
+
+    popExercise = (rmIndex) => {
+
+        if (rmIndex > -1) {
+            workouts.splice(rmIndex, 1);
+        }
+        for (let i = 0; i < workouts.length; i++)
+        {
+            workouts[i].number = i + 1;
+        }
+        this.setState({count: (this.state.count - 1)})
+
     }
 
     render () {
@@ -62,7 +83,7 @@ class WorkoutLog extends React.Component {
                 <TouchableOpacity style={styles.exerciseBubble}>
                     <Text>Exercise 3</Text>
                 </TouchableOpacity> */}
-                <DisplayWorkouts />
+                <DisplayWorkouts popExercise={this.popExercise} />
             </View>
     
             <TouchableOpacity style={styles.addBtn} onPress={this.pushNewExercise}>
