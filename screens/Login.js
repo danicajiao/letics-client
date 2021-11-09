@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
@@ -9,6 +9,8 @@ import { Header } from './../components/Header';
 import { CustomButton } from './../components/CustomButton';
 
 const Login = () => {
+    const [hidePassword, setHidePassword] = useState(true);
+
     return (
         <View style={styles.container}>
             <Header title={'Log In'} />
@@ -41,7 +43,10 @@ const Login = () => {
                             onChangeText={handleChange('password')}
                             onBlur={handleBlur('password')}
                             value={values.password}
-                            keyboardType="default"
+                            secureTextEntry={hidePassword}
+                            isPassword={true}
+                            hidePassword={hidePassword}
+                            setHidePassword={setHidePassword}
                         />
                         <CustomButton
                             text={'LOG IN'}
@@ -56,14 +61,19 @@ const Login = () => {
     );
 };
 
-const MyTextInput = ({ label, icon, ...props }) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
-                <Octicons name={icon} size={24} color={Colors.darkLight} />
+                <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
             <Text style={styles.inputLabel}>{label}</Text>
             <TextInput style={styles.textInput} {...props} />
+            {isPassword && (
+                <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
+                    <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />
+                </TouchableOpacity>
+            )}
         </View>
     );
 };
@@ -93,6 +103,13 @@ const styles = StyleSheet.create({
     },
     leftIcon: {
         left: 15,
+        top: 35,
+        position: 'absolute',
+        zIndex: 1,
+        elevation: (Platform.OS === 'android') ? 50 : 0
+    },
+    rightIcon: {
+        right: 15,
         top: 35,
         position: 'absolute',
         zIndex: 1,

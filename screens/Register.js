@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -9,8 +9,11 @@ import { Header } from './../components/Header';
 import { CustomButton } from './../components/CustomButton';
 
 const Register = () => {
+    const [hidePassword, setHidePassword] = useState(true);
+
     return (
         <View style={styles.container}>
+            <StatusBar style="dark" />
             <Header title={'Register'} />
             <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
                 <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
@@ -51,12 +54,16 @@ const Register = () => {
                             onChangeText={handleChange('password')}
                             onBlur={handleBlur('password')}
                             value={values.password}
-                            keyboardType="default"
+                            secureTextEntry={hidePassword}
+                            isPassword={true}
+                            hidePassword={hidePassword}
+                            setHidePassword={setHidePassword}
                         />
                         <CustomButton
                             text={'SIGN UP'}
                             buttonStyles={styles.button}
                             textStyles={styles.buttonText}
+                            onPress={handleSubmit}
                         />
                     </View>
                 )
@@ -66,7 +73,7 @@ const Register = () => {
     );
 };
 
-const MyTextInput = ({ label, icon, ...props }) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
     return (
         <View style={styles.formArea}>
             <View style={styles.leftIcon}>
@@ -74,6 +81,11 @@ const MyTextInput = ({ label, icon, ...props }) => {
             </View>
             <Text style={styles.inputLabel}>{label}</Text>
             <TextInput style={styles.textInput} {...props} />
+            {isPassword && (
+                <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
+                    <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />
+                </TouchableOpacity>
+            )}
         </View>
     );
 };
@@ -103,6 +115,13 @@ const styles = StyleSheet.create({
     },
     leftIcon: {
         left: 15,
+        top: 35,
+        position: 'absolute',
+        zIndex: 1,
+        elevation: (Platform.OS === 'android') ? 50 : 0
+    },
+    rightIcon: {
+        right: 15,
         top: 35,
         position: 'absolute',
         zIndex: 1,
