@@ -5,6 +5,7 @@ import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
+import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
 
 const axios = require('axios').default;
 
@@ -50,67 +51,69 @@ const Login = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <StatusBar style="dark" />
-            <Header title={'Log In'} />
-            <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
-                <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
-            </TouchableOpacity>
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                onSubmit={(values, { setSubmitting }) => {
-                    console.log('Submitted to server:');
-                    console.log(values);
+        <KeyboardAvoidingWrapper>
+            <View style={styles.container}>
+                <StatusBar style="dark" />
+                <Header title={'Log In'} />
+                <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
+                    <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
+                </TouchableOpacity>
+                <Formik
+                    initialValues={{ email: '', password: '' }}
+                    onSubmit={(values, { setSubmitting }) => {
+                        console.log('Submitted to server:');
+                        console.log(values);
 
-                    // Input checks
-                    if (values.email == '' || values.password == '') {
-                        handleMessage("Please fill in the fields");
-                        setSubmitting(false);
-                    } else {
-                        handleLogin(values, setSubmitting);
-                    }
-                }}
-            >
-                {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
-                    <View style={styles.forms}>
-                        <MyTextInput
-                            label='Email Address'
-                            icon='mail'
-                            placeholder='andyj@gmail.com'
-                            placeholderTextColor={Colors.darkLight}
-                            onChangeText={handleChange('email')}
-                            onBlur={handleBlur('email')}
-                            value={values.email}
-                            keyboardType="email-address"
-                        />
-                        <MyTextInput
-                            label='Password'
-                            icon='lock'
-                            placeholder='**********'
-                            placeholderTextColor={Colors.darkLight}
-                            onChangeText={handleChange('password')}
-                            onBlur={handleBlur('password')}
-                            value={values.password}
-                            secureTextEntry={hidePassword}
-                            isPassword={true}
-                            hidePassword={hidePassword}
-                            setHidePassword={setHidePassword}
-                        />
-                        {!isSubmitting && (
-                            <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-                                <Text style={styles.buttonText}>LOG IN</Text>
-                            </TouchableOpacity>
-                        )}
-                        {isSubmitting && (
-                            <TouchableOpacity disabled={true} style={styles.loginButton}>
-                                <ActivityIndicator size='small' color='white' />
-                            </TouchableOpacity>
-                        )}
-                        <Text type={messageType} style={styles.message}>{message}</Text>
-                    </View>
-                )}
-            </Formik >
-        </View >
+                        // Input checks
+                        if (values.email == '' || values.password == '') {
+                            handleMessage("Please fill in the fields");
+                            setSubmitting(false);
+                        } else {
+                            handleLogin(values, setSubmitting);
+                        }
+                    }}
+                >
+                    {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                        <View style={styles.forms}>
+                            <MyTextInput
+                                label='Email Address'
+                                icon='mail'
+                                placeholder='andyj@gmail.com'
+                                placeholderTextColor={Colors.darkLight}
+                                onChangeText={handleChange('email')}
+                                onBlur={handleBlur('email')}
+                                value={values.email}
+                                keyboardType="email-address"
+                            />
+                            <MyTextInput
+                                label='Password'
+                                icon='lock'
+                                placeholder='**********'
+                                placeholderTextColor={Colors.darkLight}
+                                onChangeText={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                                value={values.password}
+                                secureTextEntry={hidePassword}
+                                isPassword={true}
+                                hidePassword={hidePassword}
+                                setHidePassword={setHidePassword}
+                            />
+                            {!isSubmitting && (
+                                <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                                    <Text style={styles.buttonText}>LOG IN</Text>
+                                </TouchableOpacity>
+                            )}
+                            {isSubmitting && (
+                                <TouchableOpacity disabled={true} style={styles.loginButton}>
+                                    <ActivityIndicator size='small' color='white' />
+                                </TouchableOpacity>
+                            )}
+                            <Text type={messageType} style={styles.message}>{message}</Text>
+                        </View>
+                    )}
+                </Formik >
+            </View >
+        </KeyboardAvoidingWrapper>
     );
 };
 
