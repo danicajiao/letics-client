@@ -5,10 +5,8 @@ import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
-import { CustomButton } from './../components/CustomButton';
 
 const axios = require('axios').default;
-
 
 const Register = () => {
     const [hidePassword, setHidePassword] = useState(true);
@@ -112,12 +110,6 @@ const Register = () => {
                             <TouchableOpacity style={styles.registerButton} onPress={handleSubmit}>
                                 <Text style={styles.buttonText}>SIGN UP</Text>
                             </TouchableOpacity>
-                            // <CustomButton
-                            //     text={'SIGN UP'}
-                            //     buttonStyles={styles.button}
-                            //     textStyles={styles.buttonText}
-                            //     onPress={handleSubmit}
-                            // />
                         )}
                         {isSubmitting && (
                             <TouchableOpacity disabled={true} style={styles.registerButton}>
@@ -205,7 +197,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: Colors.tertiary
     },
-    button: {
+    registerButton: {
+        alignItems: "center",
+        borderWidth: 2,
+        paddingVertical: 20,
+        paddingHorizontal: 60,
+        borderRadius: 5,
         backgroundColor: '#000000',
         width: '90%',
     },
@@ -217,15 +214,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: (props => props.type == 'SUCCESS' ? 'green' : 'red')
-    },
-    registerButton: {
-        alignItems: "center",
-        borderWidth: 2,
-        paddingVertical: 20,
-        paddingHorizontal: 60,
-        borderRadius: 5,
-        backgroundColor: '#000000',
-        width: '90%',
     }
 });
 

@@ -16,18 +16,18 @@ const LoggedOut = () => {
                     <Image style={styles.logo} source={require('./../assets/img/logo.png')} />
                 </View>
                 <View style={styles.buttons}>
-                    <CustomButton text={'LOG IN'} />
-                    <CustomButton
-                        text={'REGISTER'}
-                        buttonStyles={styles.registerButton}
-                        textStyles={styles.registerText}
-                    />
-                    {/* <TouchableOpacity style={styles.loginButton} onPress={() => Alert.alert('Log In button pressed')}>
-                        <Text style={styles.textStyle1}>LOG IN</Text>
+                    <TouchableOpacity
+                        style={[styles.button]}
+                        onPress={() => Alert.alert('LOG IN button pressed')}
+                    >
+                        <Text style={styles.buttonText}>LOG IN</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.registerButton} onPress={() => Alert.alert('Register button pressed')}>
-                        <Text style={styles.textStyle1}>REGISTER</Text>
-                    </TouchableOpacity> */}
+                    <TouchableOpacity
+                        style={[styles.button, styles.registerButton]}
+                        onPress={() => Alert.alert('REGISTER button pressed')}
+                    >
+                        <Text style={[styles.buttonText, styles.registerText]}>REGISTER</Text>
+                    </TouchableOpacity>
                 </View>
             </ImageBackground>
         </View>
@@ -59,6 +59,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center',
         paddingBottom: 10
+    },
+    button: {
+        alignItems: "center",
+        borderWidth: 2,
+        paddingVertical: 20,
+        paddingHorizontal: 60,
+        borderRadius: 5,
+    },
+    buttonText: {
+        fontWeight: 'bold'
     },
     registerButton: {
         backgroundColor: "#FFB800",

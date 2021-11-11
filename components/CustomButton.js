@@ -1,3 +1,5 @@
+// This entire file is primarily for showing how to create a custom component and export it to the app.
+// It is not being used anywhere else.
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 

@@ -48,11 +48,9 @@ const Login = () => {
                             hidePassword={hidePassword}
                             setHidePassword={setHidePassword}
                         />
-                        <CustomButton
-                            text={'LOG IN'}
-                            buttonStyles={styles.button}
-                            textStyles={styles.buttonText}
-                        />
+                        <TouchableOpacity style={styles.registerButton} onPress={handleSubmit}>
+                            <Text style={styles.buttonText}>LOG IN</Text>
+                        </TouchableOpacity>
                     </View>
                 )
                 }
@@ -132,12 +130,18 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: Colors.tertiary,
     },
-    button: {
+    registerButton: {
+        alignItems: "center",
+        borderWidth: 2,
+        paddingVertical: 20,
+        paddingHorizontal: 60,
+        borderRadius: 5,
         backgroundColor: '#000000',
         width: '90%',
     },
     buttonText: {
-        color: '#ffffff'
+        color: '#ffffff',
+        fontWeight: 'bold'
     }
 });
 
