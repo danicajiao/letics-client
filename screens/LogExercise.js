@@ -1,7 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import { DataTable } from 'react-native-paper';
+import { DataTable, TextInput } from 'react-native-paper';
+import { Formik } from 'formik';
+import { Colors } from './../components/styles';
 
 let sets = [];
 
@@ -13,7 +15,9 @@ function DisplaySets() {
             <View key={set.number}>
                 <DataTable.Row>
                     <DataTable.Cell>{set.number}</DataTable.Cell>
-                    <DataTable.Cell>{set.weight}</DataTable.Cell>
+                    <DataTable.Cell>
+                        {set.weight}
+                    </DataTable.Cell>
                     <DataTable.Cell>{set.reps}</DataTable.Cell>
                 </DataTable.Row>
             </View>
@@ -56,30 +60,57 @@ class LogExercise extends React.Component {
                 <TouchableOpacity style={styles.notesBtn}></TouchableOpacity>
                 <Text style={styles.exerciseTitle}>Random Exercise</Text>
 
-                <View style={styles.tableComponent}>
-                    <DataTable style={styles.table}>
-                        <DataTable.Header>
-                            <DataTable.Title>Set</DataTable.Title>
-                            <DataTable.Title>Weight</DataTable.Title>
-                            <DataTable.Title>Reps</DataTable.Title>
-                        </DataTable.Header>
+                <Formik
+                
+                    initialValues={{weight: '', reps: ''}}
+                    onSubmit={(values) => {
+                        console.log(values);
+                    }}
+                >
+                    {(props) => (
+                        // CHECK THIS!!!!!!!!!!!!!!!
+                        <View style={styles.tableComponent}> 
 
-                        <DisplaySets />
+                            <View style={styles.tableComponent}>
+                                <DataTable style={styles.table}>
+                                    <DataTable.Header>
+                                        <DataTable.Title>Set</DataTable.Title>
+                                        <DataTable.Title>Weight</DataTable.Title>
+                                        <DataTable.Title>Reps</DataTable.Title>
+                                    </DataTable.Header>
 
-                    </DataTable>
-                </View>
+                                    <DisplaySets />
 
-                <TouchableOpacity style={styles.addSetBtn} onPress={this.pushNewSet}>
-                    <Text style={styles.addBtnText}>+ Add Set</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn}>
-                    <Text style={styles.addBtnText}>LOG</Text>
-                </TouchableOpacity>
+                                </DataTable>
+                            </View>
+
+                            <TouchableOpacity style={styles.addSetBtn} onPress={this.pushNewSet}>
+                                <Text style={styles.addBtnText}>+ Add Set</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.logBtn}>
+                                <Text style={styles.addBtnText}>LOG</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                    )}
+
+
+
+                </Formik>
+                
 
             </View>
         );
 }
 }
+
+// const MyTextInput = ({ label, icon, ...props }) => {
+//     return (
+//         <View style={styles.formArea}>
+//             <TextInput style={styles.textInput} {...props} />
+//         </View>
+//     );
+// };
 
 const styles = StyleSheet.create({
     container: {
@@ -107,10 +138,19 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold'
     },
+    forms: {
+        flex: 1,
+        // paddingTop: 20,
+        // alignItems: 'center',
+        // backgroundColor: 'green',
+    },
+    formArea: {
+        width: "90%",
+    },
     tableComponent: {
         top: '20%',
         flex: 0.5,
-        backgroundColor: '#fff',
+        // backgroundColor: 'red',
         alignItems: 'center',
     },
     table: {
