@@ -1,11 +1,38 @@
 import React, { useState } from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Touchable, Modal} from 'react-native';
 import { Octicons } from '@expo/vector-icons';
-
+//import LogExercise from './../screens/LogExercise';
+import LogExercise from './LogExercise';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 let workouts = [];
 
+// native stack navigator for navigating between screens
+const Stack = createNativeStackNavigator();
+
+// stack with 1 route, the LogExercise page
+const MyStack = () => {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="LogExercise"
+            component={LogExercise}
+            //options={{ title: 'Welcome' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  };
+
 function DisplayWorkouts({popExercise}) {
+    const state = {};
+
+    // navigation object for changing pages
+    const navigation = useNavigation();
+     
     // console.log(sets.length);
     const list = () => {
         return workouts.map((exercise) => {
@@ -20,6 +47,9 @@ function DisplayWorkouts({popExercise}) {
                             break;
                         }
                     }
+                }}
+                onPress={() => {
+                    navigation.navigate('LogExercise')
                 }}>
                     <Text style={styles.exerciseText}>{exercise.name}</Text>
                 </TouchableOpacity>
