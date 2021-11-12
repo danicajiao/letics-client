@@ -1,5 +1,6 @@
-import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Touchable} from 'react-native';
+import React, { useState } from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, Touchable, Modal} from 'react-native';
+import { Octicons } from '@expo/vector-icons';
 
 
 let workouts = [];
@@ -20,7 +21,7 @@ function DisplayWorkouts({popExercise}) {
                         }
                     }
                 }}>
-                    <Text>Exercise: {exercise.number}</Text>
+                    <Text style={styles.exerciseText}>{exercise.name}</Text>
                 </TouchableOpacity>
             </View>
           );
@@ -32,27 +33,24 @@ function DisplayWorkouts({popExercise}) {
 
 
 
-class WorkoutLog extends React.Component {
-
-    constructor() {
-        super();
-        // Define the initial state:
-        this.state = { count: 0 };
-    }
-
-    pushNewExercise = () => {
+function WorkoutLog(){
+    const [count, setCount] = useState(0);
+    const [modalOpen, setModalOpen] = useState(false);
+    
+    function pushNewExercise(exerciseName) {
         if (workouts.length < 3){
             workouts.push(
                 {
                    number: workouts.length + 1,
+                   name: exerciseName,
                 }
             )
-            this.setState({count: (this.state.count + 1)});
+            setCount(count + 1);
         }
     }
-
-    popExercise = (rmIndex) => {
-
+    
+    function popExercise(rmIndex){
+    
         if (rmIndex > -1) {
             workouts.splice(rmIndex, 1);
         }
@@ -60,33 +58,43 @@ class WorkoutLog extends React.Component {
         {
             workouts[i].number = i + 1;
         }
-        this.setState({count: (this.state.count - 1)})
-
+        setCount(count - 1)
+    
     }
-
-    render () {
 
         return (
           <View style={styles.container}>
-            <TouchableOpacity style={styles.cancelBtn}></TouchableOpacity>
+              <Modal visible={modalOpen} animationType="slide">
+                <View style={styles.modalContent}>
+                    <TouchableOpacity onPress={() => setModalOpen(false)}>
+                        <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+                    </TouchableOpacity>
+                    <View style={styles.modalList}>
+                        <TouchableOpacity style={styles.modalExercise} onPress={function(){pushNewExercise('Bench'); setModalOpen(false)}}>
+                            <Text style={styles.modalText}>Bench</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalExercise} onPress={function(){pushNewExercise('Squat'); setModalOpen(false)}}>
+                            <Text style={styles.modalText}>Squat</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalExercise} onPress={function(){pushNewExercise('Deadlift'); setModalOpen(false)}}>
+                            <Text style={styles.modalText}>Deadlift</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+              </Modal>
+
+              {/* <TouchableOpacity onPress={() => setModalOpen(false)}>
+                        <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+                    </TouchableOpacity> */}
             <View style={styles.titlecontainer}>
                 <Text style={styles.title}>Workout for</Text>
                 <Text style={styles.title}>{currentDay()}</Text>
             </View>
             <View style={styles.exerciseList}>
-                {/* <TouchableOpacity style={styles.exerciseBubble}>
-                    <Text>Exercise 1</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.exerciseBubble}>
-                    <Text>Exercise 2</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.exerciseBubble}>
-                    <Text>Exercise 3</Text>
-                </TouchableOpacity> */}
-                <DisplayWorkouts popExercise={this.popExercise} />
+                <DisplayWorkouts popExercise={popExercise} />
             </View>
     
-            <TouchableOpacity style={styles.addBtn} onPress={this.pushNewExercise}>
+            <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
                     <Text style={styles.addBtnText}>+ Add Exercise</Text>
                 </TouchableOpacity>
             <TouchableOpacity style={styles.logBtn}>
@@ -96,7 +104,6 @@ class WorkoutLog extends React.Component {
     
           </View>
           );
-        }
 }
 
 function currentDay(){
@@ -110,13 +117,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    cancelBtn: {
-        position: 'absolute',
-        backgroundColor: 'red',
-        width: 40,
-        height: 40,
-        left: 30,
-        top: 40,
+    backIcon: {
+        paddingLeft: 20,
+        paddingTop: 20
     },
     titlecontainer: {
         alignSelf: 'center',
@@ -136,12 +139,15 @@ const styles = StyleSheet.create({
         top: 120,
         flexDirection: 'column',
         // backgroundColor: 'red',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        
     },
     exerciseBubble: {
+        marginTop: 10,
         width: '100%',
         height: 40,
         backgroundColor: 'grey',
+        borderRadius: 10,
     },
     addBtn: {
         marginTop: 150,
@@ -163,5 +169,33 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 150,
     },
+    modalContent: {
+        flex: 1,
+    },  
+    modalList: {
+        flex: 0.5,
+        top: 25,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        // backgroundColor: 'red',
+    },
+    modalExercise: {
+        width: '90%',
+        backgroundColor: 'grey',
+        height: 70,
+        borderRadius: 10,
+    },
+    modalText: {
+        top: 20,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: '200',
+    },
+    exerciseText: {
+        top: 5,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: '200',
+    }
 })
 export default WorkoutLog;

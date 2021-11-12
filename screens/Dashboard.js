@@ -3,7 +3,6 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform } 
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
-import TaskBar from './../components/TaskBar'; // custom bottom navigation bar
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { CustomButton } from './../components/CustomButton';
@@ -16,7 +15,6 @@ const Dashboard = () => {
             <View style={styles.contain}>
                 <SubHeader title={'RECENT WORKOUT'} />
             </View>
-            <TaskBar></TaskBar>
         </View >
     );
 };
