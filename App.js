@@ -32,6 +32,11 @@ function MyTabs() {
           <Ionicons name="barbell" size={24} color="black" />
         ),
       }} />
+      <Tab.Screen name="LogExercise" component={LogExercise} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="barbell" size={24} color="black" />
+        )
+      }} />
     </Tab.Navigator>
   );
 }
