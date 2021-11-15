@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 // for the Navigation Bar
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
@@ -28,27 +28,37 @@ function MyTabs() {
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="home" size={24} color="black" />
         ),
+        headerShown: false,
       }} />
       <Tab.Screen name="Workouts" component={WorkoutLog} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="barbell" size={24} color="black" />
         ),
+        headerShown: false,
       }} />
       <Tab.Screen name="LogExercise" component={LogExercise} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="barbell" size={24} color="black" />
-        )
+        ),
+        headerShown: false,
       }} />
     </Tab.Navigator>
   );
 }
 
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'rgb(255, 255, 255)'
+  },
+};
+
 // main
 export default function App() {
   return (
-    // <NavigationContainer>
-    //   <MyTabs />
-    // </NavigationContainer>
-    <WorkoutsList />
+    <NavigationContainer theme={MyTheme}>
+      <MyTabs />
+    </NavigationContainer>
   );
 }
