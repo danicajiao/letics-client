@@ -15,6 +15,7 @@ import LogExercise from './screens/LogExercise';
 import WorkoutLog from './screens/WorkoutLog';
 import Dashboard from './screens/Dashboard';
 import History from './screens/History';
+import WorkoutsList from './screens/WorkoutsList';
 
 // navigation bar component
 const Tab = createBottomTabNavigator();
@@ -48,6 +49,6 @@ export default function App() {
     // <NavigationContainer>
     //   <MyTabs />
     // </NavigationContainer>
-    <History />
+    <WorkoutsList />
   );
 }
