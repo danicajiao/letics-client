@@ -42,6 +42,12 @@ function MyTabs() {
         ),
         headerShown: false,
       }} />
+      <Tab.Screen name="WorkoutsList" component={WorkoutsList} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="barbell" size={24} color="black" />
+        ),
+        headerShown: false,
+      }} />
     </Tab.Navigator>
   );
 }

@@ -81,8 +81,7 @@ const WorkoutsList = () => {
                             <Text style={styles.workoutType}>{item.type}</Text>
                         </View>
                     </View>
-                )
-                }
+                )}
                 renderCustomSectionHeader={(section) => (
                     <View style={styles.sectionHeaderContainer}>
                         <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
@@ -199,4 +198,3 @@ const styles = StyleSheet.create({
 });
 
 export default WorkoutsList;
-
