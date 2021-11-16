@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Touchable, Modal} from 'react-native';
 import { Octicons } from '@expo/vector-icons';
+import LogExercise from './../screens/LogExercise';
 
 
 let workouts = [];
@@ -11,7 +12,11 @@ function DisplayWorkouts({popExercise}) {
         return workouts.map((exercise) => {
           return (
             <View key={exercise.number}>
-                <TouchableOpacity style={styles.exerciseBubble} onLongPress={() => {
+                <TouchableOpacity style={styles.exerciseBubble} 
+                onPress={()=>{
+
+                }}
+                onLongPress={() => {
                     for (let index = 0; index < workouts.length; index++)
                     {
                         if (workouts[index].number === exercise.number)
