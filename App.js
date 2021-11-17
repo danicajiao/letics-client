@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { LinearGradient } from 'expo-linear-gradient'; // yellow linear gradient for button
 
 // Screens
 import LoggedOut from './screens/LoggedOut';
@@ -32,7 +33,25 @@ function MyTabs() {
       }} />
       <Tab.Screen name="Workouts" component={WorkoutLog} options={{
         tabBarIcon: ({ color, size }) => (
-          <Ionicons name="barbell" size={24} color="black" />
+          <Ionicons name="time" size={24} color="black" />
+        ),
+        headerShown: false,
+      }} />
+      <Tab.Screen name="Add" component={WorkoutLog} options={{
+        tabBarLabel: '',
+        tabBarIcon: ({ color }) => (
+          <View
+          style={{
+            position: 'absolute',
+            bottom: -19, // space from bottombar
+            height: 68,
+            width: 68,
+            borderRadius: 80,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}> 
+          <Ionicons name="add-circle" color='orange' size={68}/>
+          </View>
         ),
         headerShown: false,
       }} />
@@ -44,7 +63,7 @@ function MyTabs() {
       }} />
       <Tab.Screen name="WorkoutsList" component={WorkoutsList} options={{
         tabBarIcon: ({ color, size }) => (
-          <Ionicons name="barbell" size={24} color="black" />
+          <Ionicons name="person" size={24} color="black" />
         ),
         headerShown: false,
       }} />
