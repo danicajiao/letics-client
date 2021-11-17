@@ -31,7 +31,7 @@ function MyTabs() {
         ),
         headerShown: false,
       }} />
-      <Tab.Screen name="Workouts" component={WorkoutLog} options={{
+      <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="time" size={24} color="black" />
         ),
@@ -61,7 +61,7 @@ function MyTabs() {
         ),
         headerShown: false,
       }} />
-      <Tab.Screen name="WorkoutsList" component={WorkoutsList} options={{
+      <Tab.Screen name="Workouts" component={WorkoutsList} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="person" size={24} color="black" />
         ),

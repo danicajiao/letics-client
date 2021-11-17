@@ -8,7 +8,7 @@ import { AlphabetList } from "react-native-section-alphabet-list";
 
 const axios = require('axios').default;
 
-const WorkoutsList = () => {
+const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
 
@@ -74,14 +74,15 @@ const WorkoutsList = () => {
                     fontSize: 12,
                 }}
                 renderCustomItem={(item) => (
-                    <View style={styles.listItemContainer}>
+                    <TouchableOpacity style={styles.listItemContainer} onPress={() => { pushNewExercise(item.value); setModalOpen(false) }}>
                         <View style={styles.cardImg}></View>
                         <View style={styles.listItemTextContainer}>
                             <Text style={styles.workoutName}>{item.value}</Text>
                             <Text style={styles.workoutType}>{item.type}</Text>
                         </View>
-                    </View>
-                )}
+                    </TouchableOpacity>
+                )
+                }
                 renderCustomSectionHeader={(section) => (
                     <View style={styles.sectionHeaderContainer}>
                         <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
