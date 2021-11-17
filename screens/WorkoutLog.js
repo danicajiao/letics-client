@@ -6,6 +6,7 @@ import LogExercise from './LogExercise';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { WorkoutsList } from './WorkoutsList';
 
 let workouts = [];
 
