@@ -16,7 +16,7 @@ export const ExerciseCard = (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.card}>
-                <Text style={styles.exerciseName}>ARNOLD PRESS</Text>
+                <Text style={styles.exerciseName}>{props.exerciseName}</Text>
                 <View style={styles.tableComponent}>
                     <Table>
                         <Row data={tableHead} style={{ borderBottomWidth: 2 }} textStyle={{ fontWeight: 'bold' }} />
@@ -81,3 +81,5 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     }
 });
+
+export default ExerciseCard;

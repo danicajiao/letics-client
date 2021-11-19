@@ -40,8 +40,10 @@ function DisplayWorkouts({ popExercise }) {
     const list = () => {
         return workouts.map((exercise) => {
             return (
-                <View key={exercise.number}>
-                    <TouchableOpacity style={styles.exerciseBubble} onLongPress={() => {
+                <View key={exercise.number} style={{height: 150,}}>
+                    <ExerciseCard 
+                        exerciseName={exercise.name}
+                    onLongPress={() => {
                         for (let index = 0; index < workouts.length; index++) {
                             if (workouts[index].number === exercise.number) {
                                 popExercise(index);
@@ -53,7 +55,7 @@ function DisplayWorkouts({ popExercise }) {
                             navigation.navigate('LogExercise')
                         }}>
                         <Text style={styles.exerciseText}>{exercise.name}</Text>
-                    </TouchableOpacity>
+                    </ExerciseCard>
                 </View>
             );
         });
