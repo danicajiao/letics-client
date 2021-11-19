@@ -30,19 +30,19 @@ function MyTabs() {
         ),
         headerShown: false,
       }} />
-      <Tab.Screen name="Workouts" component={WorkoutLog} options={{
+      <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="barbell" size={24} color="black" />
         ),
         headerShown: false,
       }} />
-      <Tab.Screen name="LogExercise" component={LogExercise} options={{
+      {/* <Tab.Screen name="LogExercise" component={LogExercise} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="barbell" size={24} color="black" />
         ),
         headerShown: false,
-      }} />
-      <Tab.Screen name="WorkoutsList" component={WorkoutsList} options={{
+      }} /> */}
+      <Tab.Screen name="Workouts" component={WorkoutsList} options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="barbell" size={24} color="black" />
         ),
