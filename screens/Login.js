@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
@@ -7,6 +7,7 @@ import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
 
 const axios = require('axios').default;
 
@@ -15,6 +16,17 @@ const Login = () => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
     const auth = getAuth();
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.navigate("Home");
+            }
+        })
+        return unsubscribe;
+    }, []);
+
 
     const handleLogin = (credentials, setSubmitting) => {
         // const localurl = 'http://localhost:3000/';
