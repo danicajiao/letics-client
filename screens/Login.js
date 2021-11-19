@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
@@ -6,6 +6,8 @@ import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
 
 const axios = require('axios').default;
 
@@ -13,6 +15,18 @@ const Login = () => {
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+    const auth = getAuth();
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.navigate("Home");
+            }
+        })
+        return unsubscribe;
+    }, []);
+
 
     const handleLogin = (credentials, setSubmitting) => {
         // const localurl = 'http://localhost:3000/';
@@ -21,28 +35,51 @@ const Login = () => {
 
         handleMessage(null);
 
-        // Ensure that this points to the correct url when in testing or production
-        axios.post(testurl + 'record/login', credentials)
-            .then((response) => {
-                const result = response.data;
-                const { status, message, data, mongdb } = result;
+        // // Ensure that this points to the correct url when in testing or production
+        // axios.post(testurl + 'record/login', credentials)
+        //     .then((response) => {
+        //         const result = response.data;
+        //         const { status, message, data, mongdb } = result;
 
-                console.log("Recieved from server:");
-                console.log(result);
+        //         console.log("Recieved from server:");
+        //         console.log(result);
 
-                if (status !== 'SUCCESS') {
-                    handleMessage(message, status);
-                } else {
-                    // TODO: Navigate to dashboard
-                }
+        //         if (status !== 'SUCCESS') {
+        //             handleMessage(message, status);
+        //         } else {
+        //             // TODO: Navigate to dashboard
+        //         }
+        //         setSubmitting(false);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //         setSubmitting(false);
+        //         handleMessage("An error occured. Check your network and try again.");
+        //     });
+        signInWithEmailAndPassword(auth, credentials.email, credentials.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log("Recieved from Firebase:");
+                console.log(user);
+                // if (status !== 'SUCCESS') {
+                //     handleMessage(message, status);
+                // } else {
+                //     // TODO: Navigate to dashboard
+                // }
                 setSubmitting(false);
+
             })
             .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
                 console.log(error);
                 setSubmitting(false);
-                handleMessage("An error occured. Check your network and try again.");
+                // handleMessage("An error occured. Check your network and try again.");
+                handleMessage(errorMessage);
             });
     }
+
 
     // If type is null, we assume the request failed
     const handleMessage = (message, type = 'FAILED') => {
@@ -54,10 +91,10 @@ const Login = () => {
         <KeyboardAvoidingWrapper>
             <View style={styles.container}>
                 <StatusBar style="dark" />
-                <Header title={'Log In'} />
                 <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
-                    <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
+                    <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
+                <Header title={'Log In'} />
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     onSubmit={(values, { setSubmitting }) => {
@@ -124,7 +161,7 @@ const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, .
             <View style={styles.leftIcon}>
                 <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
-            <TextInput autoCapitalize="none" style={styles.textInput} {...props} />
+            <TextInput autoCapitalize="none" autoCorrect={false} style={styles.textInput} {...props} />
             {isPassword && (
                 <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
                     <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />

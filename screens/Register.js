@@ -6,6 +6,11 @@ import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
+import app from '../config/firebase';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+
+// import axios from 'axios';
 
 const axios = require('axios').default;
 
@@ -13,6 +18,7 @@ const Register = () => {
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+    const auth = getAuth();
 
     const handleRegister = (credentials, setSubmitting) => {
         // const localurl = 'http://localhost:3000/';
@@ -21,26 +27,48 @@ const Register = () => {
 
         handleMessage(null);
 
-        // Ensure that this points to the correct url when in testing or production
-        axios.post(testurl + 'record/add', credentials)
-            .then((response) => {
-                const result = response.data;
-                const { status, message, data, mongdb } = result;
+        // // Ensure that this points to the correct url when in testing or production
+        // axios.post(testurl + 'record/add', credentials)
+        //     .then((response) => {
+        //         const result = response.data;
+        //         const { status, message, data, mongdb } = result;
 
-                console.log("Recieved from server:");
-                console.log(result);
+        //         console.log("Recieved from server:");
+        //         console.log(result);
 
-                if (status !== 'SUCCESS') {
-                    handleMessage(message, status);
-                } else {
-                    // TODO: Navigate to dashboard
-                }
+        //         if (status !== 'SUCCESS') {
+        //             handleMessage(message, status);
+        //         } else {
+        //             // TODO: Navigate to dashboard
+        //         }
+        //         setSubmitting(false);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //         setSubmitting(false);
+        //         handleMessage("An error occured. Check your network and try again.");
+        //     });
+        createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log("Recieved from Firebase:");
+                console.log(user);
+                // if (status !== 'SUCCESS') {
+                //     handleMessage(message, status);
+                // } else {
+                //     // TODO: Navigate to dashboard
+                // }
                 setSubmitting(false);
+
             })
             .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
                 console.log(error);
                 setSubmitting(false);
-                handleMessage("An error occured. Check your network and try again.");
+                // handleMessage("An error occured. Check your network and try again.");
+                handleMessage(errorMessage);
             });
     }
 
@@ -54,10 +82,10 @@ const Register = () => {
         <KeyboardAvoidingWrapper>
             <View style={styles.container}>
                 <StatusBar style="dark" />
-                <Header title={'Register'} />
                 <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
-                    <Octicons name={'arrow-left'} size={24} style={styles.backIcon} />
+                    <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
+                <Header title={'Register'} />
                 <Formik
                     initialValues={{ username: '', email: '', password: '' }}
                     onSubmit={(values, { setSubmitting }) => {
@@ -134,7 +162,7 @@ const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, .
             <View style={styles.leftIcon}>
                 <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
-            <TextInput autoCapitalize="none" style={styles.textInput} {...props} />
+            <TextInput autoCapitalize="none" autoCorrect={false} style={styles.textInput} {...props} />
             {isPassword && (
                 <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
                     <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />

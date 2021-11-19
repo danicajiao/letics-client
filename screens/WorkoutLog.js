@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import WorkoutsList from './WorkoutsList';
 import { Header } from './../components/Header';
+import ExerciseCard from './../components/ExerciseCard'
 
 let workouts = [];
 
@@ -63,7 +64,7 @@ function DisplayWorkouts({ popExercise }) {
 
 
 
-function WorkoutLog() {
+function WorkoutLog({navigation}) {
     const [count, setCount] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -101,6 +102,11 @@ function WorkoutLog() {
                     <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} />
                 </View>
             </Modal>
+
+            {/* // here we will add code to reset the data */}
+            <TouchableOpacity onPress={() => navigation.goBack()}> 
+                    <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+            </TouchableOpacity>
 
             <Header title={"New Workout"} />
             {/* <View style={styles.titlecontainer}>
@@ -213,6 +219,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: '200',
-    }
+    },
 })
 export default WorkoutLog;

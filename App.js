@@ -1,56 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-// for the Navigation Bar
-import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Screens
 import LoggedOut from './screens/LoggedOut';
 import Register from './screens/Register';
 import Login from './screens/Login';
-import Workouts from './screens/Workouts';
-import LogExercise from './screens/LogExercise';
-import WorkoutLog from './screens/WorkoutLog';
-import Dashboard from './screens/Dashboard';
-import History from './screens/History';
-import WorkoutsList from './screens/WorkoutsList';
-
-// navigation bar component
-const Tab = createBottomTabNavigator();
-
-//function MyTabs() {
-function MyTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Dashboard" component={Dashboard} options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="home" size={24} color="black" />
-        ),
-        headerShown: false,
-      }} />
-      <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="barbell" size={24} color="black" />
-        ),
-        headerShown: false,
-      }} />
-      {/* <Tab.Screen name="LogExercise" component={LogExercise} options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="barbell" size={24} color="black" />
-        ),
-        headerShown: false,
-      }} /> */}
-      <Tab.Screen name="Workouts" component={WorkoutsList} options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="barbell" size={24} color="black" />
-        ),
-        headerShown: false,
-      }} />
-    </Tab.Navigator>
-  );
-}
+import Home from './screens/Home';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -60,11 +16,16 @@ const MyTheme = {
   },
 };
 
+const Stack = createNativeStackNavigator();
+
 // main
 export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
-      <MyTabs />
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
