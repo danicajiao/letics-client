@@ -8,7 +8,6 @@ import Register from './screens/Register';
 import Login from './screens/Login';
 import Home from './screens/Home';
 
-
 const MyTheme = {
   ...DefaultTheme,
   colors: {
