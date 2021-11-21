@@ -1,58 +1,90 @@
-import React from 'react'
-import { StyleSheet, SafeAreaView, View, Text, TextInput } from 'react-native';
-import { DataTable } from 'react-native-paper';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import React, { useState } from 'react'
+import { StyleSheet, SafeAreaView, View, Text, TextInput, Touchable} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
+let sets = [];
 
-export const ExerciseCard = (props) => {
-    let tableHead = ['Set', 'Weight', 'Reps'];
-    let tableData = [
-        ['1', 20, '10'],
-        ['2', '20', '8'],
-        ['3', '20', '6'],
-        ['4', '20', '4']
-    ];
+function DisplaySets(){
+    const list = () => {
+        return sets.map((set) => {
+            return(
+                <View key={set.setNumber} style={{height: 40,}}>
+                    <Row setNumber={set.setNumber}></Row>
+                </View>
+            )
+        })
+    }
+    return <View>{list()}</View>;
+}
+
+function ExerciseCard(props){
+
+    const [counter, setCounter] = useState(0);
+
+    function pushSet() {
+        if (sets.length < 3){
+            sets.push(
+                {
+                    setNumber: sets.length + 1,
+                    weight: 0,
+                    reps: 0,
+                }
+            )
+            setCounter(counter + 1);
+        }
+        console.log(sets);
+    }
+
+    
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.card}>
                 <Text style={styles.exerciseName}>{props.exerciseName}</Text>
                 <View style={styles.tableComponent}>
-                    <Table>
-                        <Row data={tableHead} style={{ borderBottomWidth: 2 }} textStyle={{ fontWeight: 'bold' }} />
-                        <Rows data={tableData} textStyle={styles.text} />
-                    </Table>
+                    
+                    <DisplaySets></DisplaySets>
+                    
 
                 </View>
+                <TouchableOpacity style={styles.addSet} onPress={pushSet}>
+                    <Text>ADD SET</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView >
     );
 }
 
-function DisplaySets({ props }) {
-    return (
-        <View>
+function Row({ setNumber }) {
+    return(
+        <View style={{flex: 1,}}>
+            <View style={styles.rowStyle} >
+                <View style={{flex: 0.2}}>
+                    <Text>{setNumber}</Text>
+                </View>
+                <View style={styles.colStyle}>
+                    {/* <Text>Input Weight</Text> */}
+                    <TextInput style={styles.formArea}></TextInput>
+                </View>
+                <View style={styles.colStyle}>
+                    <TextInput style={styles.formArea}></TextInput>
+                </View>
+            </View>
 
         </View>
-    );
+    )
 }
 
-const SetInput = () => {
-    return (
-        <View style={styles.formArea}>
-            <TextInput style={styles.textInput} />
-        </View>
-    );
-};
+
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     card: {
         backgroundColor: "#F3F3F3",
-        width: "90%"
+        width: "90%",
     },
     exerciseName: {
         paddingLeft: '5%',
@@ -62,13 +94,18 @@ const styles = StyleSheet.create({
     tableHead: {
         fontWeight: 'bold'
     },
+    tableComponent: {
+        height: 100,
+        // backgroundColor: 'green',
+    },
     row: {
         height: 10
     },
     formArea: {
-        flex: 1,
-        justifyContent: 'center'
-        // backgroundColor: 'red',
+        width: '50%',
+        // justifyContent: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'lightgrey',
         // width: 100,
         // height: 100
     },
@@ -79,7 +116,24 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingVertical: 2,
         borderRadius: 5,
-    }
+    },
+    rowStyle: {
+        flex:0.33, 
+        // backgroundColor: 'red',
+        // justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    colStyle: {
+        flex: 0.40, 
+        // backgroundColor: 'purple', 
+        justifyContent: 'center',
+    },
+    addSet: {
+        alignSelf: 'center',
+        width: '90%',
+        backgroundColor: 'grey',
+        marginBottom: '1.5%',
+    },
 });
 
 export default ExerciseCard;

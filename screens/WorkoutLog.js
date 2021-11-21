@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     addBtn: {
-        marginTop: 150,
+        marginTop: 300,
         backgroundColor: 'grey',
         width: '90%',
         height: 30,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
         height: 30,
         alignSelf: 'center',
         position: 'absolute',
-        bottom: 150,
+        bottom: 50,
     },
     modalContent: {
         flex: 1,
