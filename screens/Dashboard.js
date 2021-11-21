@@ -7,17 +7,62 @@ import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { CustomButton } from './../components/CustomButton';
 import { SubHeader } from '../components/SubHeader';
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+  } from 'react-native-chart-kit'
 
 const Dashboard = () => {
     return (
         <View style={styles.container}>
             <Header title={'Dashboard'} />
             <View style={styles.contain}>
-                <SubHeader title={'RECENT WORKOUT'} />
+                <SubHeader title={'DAILY WORKOUT HISTORY'} />
             </View>
+            <LineChart
+                data={line}
+                width={380} // from react-native
+                height={220}
+                yAxisLabel={''}
+                chartConfig={{
+                backgroundColor: '#e26a00',
+                backgroundGradientFrom: '#fb8c00',
+                backgroundGradientTo: '#ffa726',
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                    borderRadius: 16
+                }
+            }}
+            bezier
+            style={{
+                marginVertical: 50,
+                marginHorizontal: 15,
+                borderRadius: 16
+            }}
+        />
         </View >
     );
 };
+
+// prototype plot for daily fluctuations in weight
+// sidenote: this is static data used for organzing how I want things to look
+// need to make it work with database
+const line = {
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+    datasets: [
+      {
+        data: [175, 165, 180, 180, 185, 170],
+        strokeWidth: 2, // optional
+      },
+    ],
+  };
+
+// Weekly view for the current month
 
 const StatusBarHeight = Constants.statusBarHeight;
 

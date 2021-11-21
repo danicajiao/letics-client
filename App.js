@@ -7,6 +7,9 @@ import LoggedOut from './screens/LoggedOut';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Home from './screens/Home';
+import RootStackScreen from './screens/Home';
+import WorkoutLog from './screens/WorkoutLog';
+import Dashboard from './screens/Dashboard';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -24,7 +27,7 @@ export default function App() {
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={RootStackScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
