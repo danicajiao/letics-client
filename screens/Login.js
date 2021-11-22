@@ -91,7 +91,7 @@ const Login = () => {
         <KeyboardAvoidingWrapper>
             <View style={styles.container}>
                 <StatusBar style="dark" />
-                <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
                 <Header title={'Log In'} />

@@ -13,9 +13,10 @@ import WorkoutLog from './WorkoutLog';
 import Dashboard from './Dashboard';
 import History from './History';
 import WorkoutsList from './WorkoutsList';
+import Profile from './Profile';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const CreateNewPlaceholder = () => <View/>
+const CreateNewPlaceholder = () => <View />
 
 // navigation bar component
 const Tab = createBottomTabNavigator();
@@ -25,16 +26,18 @@ const RootStack = createStackNavigator();
 const RootStackScreen = () => {
     return (
         <RootStack.Navigator
-            headerMode='none'
-            screenOptions={{animationEnabled: false}}
-            mode='modal'
+            screenOptions={{
+                animationEnabled: false,
+                headerShown: false,
+                presentation: 'modal'
+            }}
         >
-            <RootStack.Screen 
+            <RootStack.Screen
                 name="Tabs"
                 component={Home}
             />
 
-            <RootStack.Screen 
+            <RootStack.Screen
                 name="WorkoutLog"
                 component={WorkoutLog}
                 options={{ animationEnabled: true }}
@@ -46,12 +49,13 @@ const RootStackScreen = () => {
 //function () {
 const Home = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator screenOptions={{
+            headerShown: false
+        }}>
             <Tab.Screen name="Dashboard" component={Dashboard} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" size={24} color="black" />
-                ),
-                headerShown: false,
+                )
             }} />
             {/* <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
                 tabBarIcon: ({ color, size }) => (
@@ -75,9 +79,8 @@ const Home = () => {
                         <Ionicons name="add-circle" color='orange' size={68} />
                     </View>
                 ),
-                headerShown: false
-            }} 
-                listeners={({navigation}) => ({
+            }}
+                listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
                         navigation.navigate("WorkoutLog");
@@ -93,11 +96,15 @@ const Home = () => {
             <Tab.Screen name="Workouts" component={WorkoutsList} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell" size={24} color="black" />
-                ),
-                headerShown: false,
+                )
+            }} />
+            <Tab.Screen name="Profile" component={Profile} options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="barbell" size={24} color="black" />
+                )
             }} />
         </Tab.Navigator>
     );
 }
 
-export default RootStackScreen; 
+export default RootStackScreen;

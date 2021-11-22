@@ -4,10 +4,13 @@ import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
 import { CustomButton } from '../components/CustomButton'
+import { useNavigation } from '@react-navigation/native';
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
 const LoggedOut = () => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
@@ -18,13 +21,13 @@ const LoggedOut = () => {
                 <View style={styles.buttons}>
                     <TouchableOpacity
                         style={[styles.button]}
-                        onPress={() => Alert.alert('LOG IN button pressed')}
+                        onPress={() => navigation.navigate("Login")}
                     >
                         <Text style={styles.buttonText}>LOG IN</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.button, styles.registerButton]}
-                        onPress={() => Alert.alert('REGISTER button pressed')}
+                        onPress={() => navigation.navigate("Register")}
                     >
                         <Text style={[styles.buttonText, styles.registerText]}>REGISTER</Text>
                     </TouchableOpacity>
