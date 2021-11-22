@@ -43,14 +43,14 @@ function DisplayWorkouts({ popExercise }) {
                 <View key={exercise.number} style={{height: 150,}}>
                     <ExerciseCard 
                         exerciseName={exercise.name}
-                    onLongPress={() => {
-                        for (let index = 0; index < workouts.length; index++) {
-                            if (workouts[index].number === exercise.number) {
-                                popExercise(index);
-                                break;
+                        onLongPress={() => {
+                            for (let index = 0; index < workouts.length; index++) {
+                                if (workouts[index].number === exercise.number) {
+                                    popExercise(index);
+                                    break;
+                                }
                             }
-                        }
-                    }}
+                        }}
                         onPress={() => {
                             navigation.navigate('LogExercise')
                         }}>
