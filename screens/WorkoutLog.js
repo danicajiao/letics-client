@@ -42,6 +42,7 @@ function DisplayWorkouts({ popExercise }) {
             return (
                 <View key={exercise.number} style={{height: 150,}}>
                     <ExerciseCard 
+                        setArray={exercise.sets}
                         exerciseName={exercise.name}
                         onLongPress={() => {
                             for (let index = 0; index < workouts.length; index++) {
@@ -76,8 +77,11 @@ function WorkoutLog({navigation}) {
                 {
                     number: workouts.length + 1,
                     name: exerciseName,
+                    sets: [],
                 }
+                
             )
+            // console.log(workouts);
             setCount(count + 1);
         }
     }

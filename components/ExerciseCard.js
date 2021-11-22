@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, TextInput, Touchable} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-let sets = [];
+// let sets = [];
 
-function DisplaySets(){
+function DisplaySets({props}){
     const list = () => {
-        return sets.map((set) => {
+        return props.setArray.map((set) => {
             return(
                 <View key={set.setNumber} style={{height: 40,}}>
                     <Row setNumber={set.setNumber}></Row>
@@ -20,19 +20,19 @@ function DisplaySets(){
 function ExerciseCard(props){
 
     const [counter, setCounter] = useState(0);
-
+    // console.log(props.setArray)
     function pushSet() {
-        if (sets.length < 3){
-            sets.push(
+        if (props.setArray.length < 3){
+            props.setArray.push(
                 {
-                    setNumber: sets.length + 1,
+                    setNumber: props.setArray.length + 1,
                     weight: 0,
                     reps: 0,
                 }
             )
             setCounter(counter + 1);
         }
-        console.log(sets);
+        // console.log(props.setArray);
     }
 
     
@@ -43,7 +43,7 @@ function ExerciseCard(props){
                 <Text style={styles.exerciseName}>{props.exerciseName}</Text>
                 <View style={styles.tableComponent}>
                     
-                    <DisplaySets></DisplaySets>
+                    <DisplaySets props={props}></DisplaySets>
                     
 
                 </View>
