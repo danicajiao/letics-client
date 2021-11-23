@@ -11,6 +11,7 @@ import RootStackScreen from './screens/Home';
 import WorkoutLog from './screens/WorkoutLog';
 import Dashboard from './screens/Dashboard';
 import Verfiy from './screens/Verfiy';
+import Forgot from './screens/Forgot';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -31,6 +32,7 @@ export default function App() {
       }}>
         <Stack.Screen name="LoggedOut" component={LoggedOut} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Forgot" component={Forgot} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Verify" component={Verfiy} />
         <Stack.Screen name="Home" component={RootStackScreen} />

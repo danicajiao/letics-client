@@ -1,7 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, StatusBar } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, StatusBar, Image, _Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Ionicons } from '@expo/vector-icons';
+import { getAuth } from "firebase/auth";
 import { Header } from './../components/Header'
 import { useNavigation } from '@react-navigation/native';
 
@@ -23,7 +24,15 @@ const Profile = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Profile'} />
-            <View styles={styles.buttonContainer}>
+            <View style={styles.testContainer}>
+                {/* <Image style={styles.profileImg}  source={}/> */}
+                <View style={styles.profileImg}>
+                    <Ionicons name={'person'} size={'80%'} color={'gray'} />
+                </View>
+                <View style={styles.currentUserText}>
+                    <Text>Currently logged in as:</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{auth.currentUser.email}</Text>
+                </View>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
                     <Text style={styles.buttonText}>LOG OUT</Text>
                 </TouchableOpacity>
@@ -36,10 +45,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    buttonContainer: {
+    testContainer: {
         flex: 1,
+        width: '90%',
+        alignSelf: 'center',
+        // backgroundColor: '#EEE'
+    },
+    profileImg: {
+        width: 100,
+        height: 100,
+        backgroundColor: 'lightgray',
+        alignSelf: 'center',
+        borderRadius: 100,
         alignItems: 'center',
-        backgroundColor: 'red'
+        justifyContent: 'center',
+        marginVertical: '5%'
+    },
+    currentUserText: {
+        marginVertical: '5%',
+        alignItems: 'center'
     },
     logoutButton: {
         alignItems: "center",
@@ -48,7 +72,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 60,
         borderRadius: 5,
         backgroundColor: '#000000',
-        width: '90%',
+        marginVertical: '5%'
     },
     buttonText: {
         color: '#ffffff',
