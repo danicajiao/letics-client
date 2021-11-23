@@ -1,5 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -14,11 +15,12 @@ import {
     ProgressChart,
     ContributionGraph,
     StackedBarChart
-  } from 'react-native-chart-kit'
+} from 'react-native-chart-kit'
 
 const Dashboard = () => {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
             <View style={styles.contain}>
                 <SubHeader title={'DAILY WORKOUT HISTORY'} />
@@ -29,23 +31,23 @@ const Dashboard = () => {
                 height={220}
                 yAxisLabel={''}
                 chartConfig={{
-                backgroundColor: '#e26a00',
-                backgroundGradientFrom: '#fb8c00',
-                backgroundGradientTo: '#ffa726',
-                decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
+                    backgroundColor: '#e26a00',
+                    backgroundGradientFrom: '#fb8c00',
+                    backgroundGradientTo: '#ffa726',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    style: {
+                        borderRadius: 16
+                    }
+                }}
+                bezier
+                style={{
+                    marginVertical: 50,
+                    marginHorizontal: 15,
                     borderRadius: 16
-                }
-            }}
-            bezier
-            style={{
-                marginVertical: 50,
-                marginHorizontal: 15,
-                borderRadius: 16
-            }}
-        />
-        </View >
+                }}
+            />
+        </SafeAreaView >
     );
 };
 
@@ -55,19 +57,18 @@ const Dashboard = () => {
 const line = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
     datasets: [
-      {
-        data: [175, 165, 180, 180, 185, 170],
-        strokeWidth: 2, // optional
-      },
+        {
+            data: [175, 165, 180, 180, 185, 170],
+            strokeWidth: 2, // optional
+        },
     ],
-  };
+};
 
 const StatusBarHeight = Constants.statusBarHeight;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: StatusBarHeight + 10
     },
     header: {
         fontSize: 40,

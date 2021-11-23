@@ -1,21 +1,18 @@
-import React, { useState } from 'react'
-import { View, Modal, TouchableOpacity, Touchable } from 'react-native'
-import { Octicons } from '@expo/vector-icons';
+import React from 'react'
+import { View } from 'react-native'
 // for the Navigation Bar
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient'; // yellow linear gradient for button
 
-import Workouts from './Workouts';
-import LogExercise from './LogExercise';
 import WorkoutLog from './WorkoutLog';
 import Dashboard from './Dashboard';
 import History from './History';
 import WorkoutsList from './WorkoutsList';
+import Profile from './Profile';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const CreateNewPlaceholder = () => <View/>
+const CreateNewPlaceholder = () => <View />
 
 // navigation bar component
 const Tab = createBottomTabNavigator();
@@ -25,16 +22,18 @@ const RootStack = createStackNavigator();
 const RootStackScreen = () => {
     return (
         <RootStack.Navigator
-            headerMode='none'
-            screenOptions={{animationEnabled: false}}
-            mode='modal'
+            screenOptions={{
+                animationEnabled: false,
+                headerShown: false,
+                presentation: 'modal'
+            }}
         >
-            <RootStack.Screen 
+            <RootStack.Screen
                 name="Tabs"
                 component={Home}
             />
 
-            <RootStack.Screen 
+            <RootStack.Screen
                 name="WorkoutLog"
                 component={WorkoutLog}
                 options={{ animationEnabled: true }}
@@ -46,19 +45,17 @@ const RootStackScreen = () => {
 //function () {
 const Home = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen name="Dashboard" component={Dashboard} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" size={24} color="black" />
-                ),
-                headerShown: false,
+                )
             }} />
-            {/* <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
+            <Tab.Screen name="History" component={History} options={{
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="barbell" size={24} color="black" />
+                    <Ionicons name="time" size={24} color="black" />
                 ),
-                headerShown: false,
-            }} /> */}
+            }} />
             <Tab.Screen name="Add" component={CreateNewPlaceholder} options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ color }) => (
@@ -75,9 +72,8 @@ const Home = () => {
                         <Ionicons name="add-circle" color='orange' size={68} />
                     </View>
                 ),
-                headerShown: false
-            }} 
-                listeners={({navigation}) => ({
+            }}
+                listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
                         navigation.navigate("WorkoutLog");
@@ -93,11 +89,15 @@ const Home = () => {
             <Tab.Screen name="Workouts" component={WorkoutsList} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell" size={24} color="black" />
-                ),
-                headerShown: false,
+                )
+            }} />
+            <Tab.Screen name="Profile" component={Profile} options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="person" size={24} color="black" />
+                )
             }} />
         </Tab.Navigator>
     );
 }
 
-export default RootStackScreen; 
+export default RootStackScreen;

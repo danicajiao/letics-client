@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, SafeAreaView, ActivityIndicator, SectionList } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator, SectionList } from 'react-native';
 import { Formik } from 'formik';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { AlphabetList } from "react-native-section-alphabet-list";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const axios = require('axios').default;
 
@@ -33,8 +35,8 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
     ]
 
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar style="dark" />
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+            <StatusBar barStyle={'dark-content'} />
             <Header title={'Workouts'} />
             <Formik
                 initialValues={{ searchQuery: '' }}
@@ -68,6 +70,7 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
                 )}
             </Formik >
             <AlphabetList
+                style={{ flex: 1 }}
                 data={data}
                 indexLetterStyle={{
                     color: 'black',

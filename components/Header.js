@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 40,
         fontWeight: 'bold',
-        paddingLeft: 20,
+        paddingHorizontal: '5%',
         paddingTop: 20
     }
 });

@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ImageBackground, Image, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
 import { CustomButton } from '../components/CustomButton'
+import { useNavigation } from '@react-navigation/native';
+import { getAuth } from '@firebase/auth';
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
 const LoggedOut = () => {
+    const auth = getAuth();
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        auth
+            .signOut()
+            .then(() => {
+            })
+            .catch(error => alert(error.message))
+    }, [])
+
+
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
             <StatusBar style="light" />
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.darkenImage}>
@@ -18,19 +34,19 @@ const LoggedOut = () => {
                 <View style={styles.buttons}>
                     <TouchableOpacity
                         style={[styles.button]}
-                        onPress={() => Alert.alert('LOG IN button pressed')}
+                        onPress={() => navigation.navigate("Login")}
                     >
                         <Text style={styles.buttonText}>LOG IN</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.button, styles.registerButton]}
-                        onPress={() => Alert.alert('REGISTER button pressed')}
+                        onPress={() => navigation.navigate("Register")}
                     >
                         <Text style={[styles.buttonText, styles.registerText]}>REGISTER</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -42,7 +58,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     darkenImage: {
-        flex: 7,
+        flex: 8,
         alignSelf: 'stretch',
         justifyContent: 'center',
         alignItems: 'center',
@@ -58,7 +74,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        paddingBottom: 10
     },
     button: {
         alignItems: "center",

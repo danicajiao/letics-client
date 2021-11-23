@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -21,7 +22,11 @@ const Login = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                navigation.navigate("Home");
+                if (user.emailVerified) {
+                    navigation.navigate("Home");
+                } else {
+                    navigation.navigate("Verify");
+                }
             }
         })
         return unsubscribe;
@@ -89,9 +94,9 @@ const Login = () => {
 
     return (
         <KeyboardAvoidingWrapper>
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <StatusBar style="dark" />
-                <TouchableOpacity onPress={() => Alert.alert('Back button pressed')}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
                 <Header title={'Log In'} />
@@ -149,7 +154,7 @@ const Login = () => {
                         </View>
                     )}
                 </Formik >
-            </View >
+            </SafeAreaView >
         </KeyboardAvoidingWrapper>
     );
 };
@@ -171,12 +176,9 @@ const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, .
     );
 };
 
-const StatusBarHeight = Constants.statusBarHeight;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: StatusBarHeight + 10
     },
     header: {
         fontSize: 40,
