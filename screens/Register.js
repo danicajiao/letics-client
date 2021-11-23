@@ -94,7 +94,7 @@ const Register = () => {
     return (
         <KeyboardAvoidingWrapper>
             <SafeAreaView style={styles.container}>
-                <StatusBar style="dark" />
+                <StatusBar barStyle={'dark-content'} />
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
