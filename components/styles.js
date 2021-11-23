@@ -19,73 +19,73 @@ export const Colors = {
 
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
 
-export const StyledContainer = styled.View`
-    flex: 1;
-    padding: 25px;
-    padding-top: ${StatusBarHeight + 10}px;
-    background-color: ${primary};
-`;
+// export const StyledContainer = styled.View`
+//     flex: 1;
+//     padding: 25px;
+//     padding-top: ${StatusBarHeight + 10}px;
+//     background-color: ${primary};
+// `;
 
-export const InnerContainer = styled.View`
-    flex: 1;
-    width: 100%;
-    align-items: center;
-`;
+// export const InnerContainer = styled.View`
+//     flex: 1;
+//     width: 100%;
+//     align-items: center;
+// `;
 
-export const PageLogo = styled.Image`
-    width: 100%;
-    height: 100%;
-`;
+// export const PageLogo = styled.Image`
+//     width: 100%;
+//     height: 100%;
+// `;
 
-export const PageTitle = styled.Text`
-    font-size: 30px;
-    text-align: center;
-    font-weight: bold;
-    color: ${green};
-    padding: 10px;
-`;
+// export const PageTitle = styled.Text`
+//     font-size: 30px;
+//     text-align: center;
+//     font-weight: bold;
+//     color: ${green};
+//     padding: 10px;
+// `;
 
-export const DarkenImg = styled.View`
-  flex: 1;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
+// export const DarkenImg = styled.View`
+//   flex: 1;
+//   width: 100%;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: rgba(0, 0, 0, 0.4);
+// `;
 
-export const StyledFormArea = styled.View`
-    width: 90%;
-`;
+// export const StyledFormArea = styled.View`
+//     width: 90%;
+// `;
 
-export const LeftIcon = styled.View`
-    left: 15px;
-    top: 38px;
-    position: absolute;
-    z-index: 1;
-`;
+// export const LeftIcon = styled.View`
+//     left: 15px;
+//     top: 38px;
+//     position: absolute;
+//     z-index: 1;
+// `;
 
-export const StyledInputLabel = styled.Text`
-    color: ${tertiary};
-    font-size: 13px;
-    text-align: left;
-`;
+// export const StyledInputLabel = styled.Text`
+//     color: ${tertiary};
+//     font-size: 13px;
+//     text-align: left;
+// `;
 
-export const StyledTextInput = styled.TextInput`
-    background-color: ${secondary};
-    padding: 15px;
-    padding-left: 55px;
-    padding-right: 55px;
-    border-radius: 5px;
-    font-size: 16px;
-    height: 60px;
-    margin-vertical: 3px;
-    margin-bottom: 10px;
-    color: ${tertiary};
-`;
+// export const StyledTextInput = styled.TextInput`
+//     background-color: ${secondary};
+//     padding: 15px;
+//     padding-left: 55px;
+//     padding-right: 55px;
+//     border-radius: 5px;
+//     font-size: 16px;
+//     height: 60px;
+//     margin-vertical: 3px;
+//     margin-bottom: 10px;
+//     color: ${tertiary};
+// `;
 
-export const RightIcon = styled.TouchableOpacity`
-    left: 15px;
-    top: 38px;
-    position: absolute;
-    z-index: 1;
-`;
+// export const RightIcon = styled.TouchableOpacity`
+//     left: 15px;
+//     top: 38px;
+//     position: absolute;
+//     z-index: 1;
+// `;
