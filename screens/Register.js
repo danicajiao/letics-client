@@ -25,7 +25,7 @@ const Register = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                navigation.navigate("Home");
+                navigation.navigate("Verify");
             }
         })
         return unsubscribe;
@@ -63,8 +63,9 @@ const Register = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                console.log("Recieved from Firebase:");
+                console.log("UID recieved from Firebase:");
                 console.log(auth.currentUser.uid);
+
                 // if (status !== 'SUCCESS') {
                 //     handleMessage(message, status);
                 // } else {

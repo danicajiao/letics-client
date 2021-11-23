@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ImageBackground, Image, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
 import { CustomButton } from '../components/CustomButton'
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from '@firebase/auth';
 
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
 const LoggedOut = () => {
+    const auth = getAuth();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        auth
+            .signOut()
+            .then(() => {
+            })
+            .catch(error => alert(error.message))
+    }, [])
+
+
 
     return (
         <View style={styles.container}>

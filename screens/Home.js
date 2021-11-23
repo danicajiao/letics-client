@@ -16,6 +16,7 @@ import WorkoutsList from './WorkoutsList';
 import Profile from './Profile';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StatusBar } from 'expo-status-bar';
 const CreateNewPlaceholder = () => <View />
 
 // navigation bar component
@@ -100,7 +101,7 @@ const Home = () => {
             }} />
             <Tab.Screen name="Profile" component={Profile} options={{
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="barbell" size={24} color="black" />
+                    <Ionicons name="person" size={24} color="black" />
                 )
             }} />
         </Tab.Navigator>

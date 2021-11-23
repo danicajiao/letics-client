@@ -21,7 +21,11 @@ const Login = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                navigation.navigate("Home");
+                if (user.emailVerified) {
+                    navigation.navigate("Home");
+                } else {
+                    navigation.navigate("Verify");
+                }
             }
         })
         return unsubscribe;
