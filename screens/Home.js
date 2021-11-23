@@ -1,22 +1,17 @@
-import React, { useState } from 'react'
-import { View, Modal, TouchableOpacity, Touchable } from 'react-native'
-import { Octicons } from '@expo/vector-icons';
+import React from 'react'
+import { View } from 'react-native'
 // for the Navigation Bar
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient'; // yellow linear gradient for button
 
-import Workouts from './Workouts';
-import LogExercise from './LogExercise';
 import WorkoutLog from './WorkoutLog';
 import Dashboard from './Dashboard';
 import History from './History';
 import WorkoutsList from './WorkoutsList';
 import Profile from './Profile';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
 const CreateNewPlaceholder = () => <View />
 
 // navigation bar component
@@ -50,20 +45,17 @@ const RootStackScreen = () => {
 //function () {
 const Home = () => {
     return (
-        <Tab.Navigator screenOptions={{
-            headerShown: false
-        }}>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen name="Dashboard" component={Dashboard} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" size={24} color="black" />
                 )
             }} />
-            {/* <Tab.Screen name="WorkoutLog" component={WorkoutLog} options={{
+            <Tab.Screen name="History" component={History} options={{
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="barbell" size={24} color="black" />
+                    <Ionicons name="time" size={24} color="black" />
                 ),
-                headerShown: false,
-            }} /> */}
+            }} />
             <Tab.Screen name="Add" component={CreateNewPlaceholder} options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ color }) => (
