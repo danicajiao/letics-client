@@ -7,81 +7,32 @@ import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 
 const axios = require('axios').default;
 
-const Login = () => {
-    const [hidePassword, setHidePassword] = useState(true);
+const Forgot = () => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
     const auth = getAuth();
     const navigation = useNavigation();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                if (user.emailVerified) {
-                    navigation.navigate("Home");
-                } else {
-                    navigation.navigate("Verify");
-                }
-            }
-        })
-        return unsubscribe;
-    }, []);
-
-
-    const handleLogin = (credentials, setSubmitting) => {
-        // const localurl = 'http://localhost:3000/';
-        const testurl = 'http://192.168.1.105:3000/';
-        const remoteurl = 'https://letics.herokuapp.com/';
-
+    const handleForgotPassword = (email, setSubmitting) => {
         handleMessage(null);
 
-        // // Ensure that this points to the correct url when in testing or production
-        // axios.post(testurl + 'record/login', credentials)
-        //     .then((response) => {
-        //         const result = response.data;
-        //         const { status, message, data, mongdb } = result;
-
-        //         console.log("Recieved from server:");
-        //         console.log(result);
-
-        //         if (status !== 'SUCCESS') {
-        //             handleMessage(message, status);
-        //         } else {
-        //             // TODO: Navigate to dashboard
-        //         }
-        //         setSubmitting(false);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         setSubmitting(false);
-        //         handleMessage("An error occured. Check your network and try again.");
-        //     });
-        signInWithEmailAndPassword(auth, credentials.email, credentials.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log("Recieved from Firebase:");
-                console.log(user);
-                // if (status !== 'SUCCESS') {
-                //     handleMessage(message, status);
-                // } else {
-                //     // TODO: Navigate to dashboard
-                // }
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                console.log("Password Reset email sent.");
                 setSubmitting(false);
-
+                navigation.goBack();
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(error);
                 setSubmitting(false);
-                // handleMessage("An error occured. Check your network and try again.");
                 handleMessage(errorMessage);
+
             });
     }
 
@@ -99,19 +50,25 @@ const Login = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
                 </TouchableOpacity>
-                <Header title={'Log In'} />
+                <Header title={'Forgot Password'} />
+                <Text style={styles.textContainer}>
+                    <Text>
+                        Enter the email address you use with us and we'll send you a link to reset your password.{'\n\n'}
+                        If you dont see it, there is a chance it might be in your "Spam" or "Bulk Email" folder.
+                    </Text>
+                </Text>
                 <Formik
-                    initialValues={{ email: '', password: '' }}
+                    initialValues={{ email: '' }}
                     onSubmit={(values, { setSubmitting }) => {
                         console.log('Submitted to server:');
                         console.log(values);
 
                         // Input checks
-                        if (values.email == '' || values.password == '') {
-                            handleMessage("Please fill in the fields");
+                        if (values.email == '') {
+                            handleMessage("Please fill in the field");
                             setSubmitting(false);
                         } else {
-                            handleLogin(values, setSubmitting);
+                            handleForgotPassword(values.email, setSubmitting);
                         }
                     }}
                 >
@@ -127,26 +84,13 @@ const Login = () => {
                                 value={values.email}
                                 keyboardType="email-address"
                             />
-                            <MyTextInput
-                                label='Password'
-                                icon='lock'
-                                placeholder='**********'
-                                placeholderTextColor={Colors.darkLight}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                                secureTextEntry={hidePassword}
-                                isPassword={true}
-                                hidePassword={hidePassword}
-                                setHidePassword={setHidePassword}
-                            />
                             {!isSubmitting && (
-                                <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-                                    <Text style={styles.buttonText}>LOG IN</Text>
+                                <TouchableOpacity style={styles.sendButton} onPress={handleSubmit}>
+                                    <Text style={styles.buttonText}>SEND EMAIL</Text>
                                 </TouchableOpacity>
                             )}
                             {isSubmitting && (
-                                <TouchableOpacity disabled={true} style={styles.loginButton}>
+                                <TouchableOpacity disabled={true} style={styles.sendButton}>
                                     <ActivityIndicator size='small' color='white' />
                                 </TouchableOpacity>
                             )}
@@ -154,9 +98,6 @@ const Login = () => {
                         </View>
                     )}
                 </Formik >
-                <TouchableOpacity onPress={() => navigation.navigate("Forgot")}>
-                    <Text style={styles.forgotText}>Forgot Password?</Text>
-                </TouchableOpacity>
             </SafeAreaView >
         </KeyboardAvoidingWrapper>
     );
@@ -187,13 +128,16 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold'
     },
+    textContainer: {
+        paddingVertical: '10%',
+        paddingHorizontal: '5%'
+    },
     backIcon: {
         paddingLeft: 20,
         paddingTop: 20
     },
     forms: {
         flex: 1,
-        paddingTop: 20,
         alignItems: 'center'
     },
     formArea: {
@@ -232,7 +176,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: Colors.tertiary
     },
-    loginButton: {
+    sendButton: {
         alignItems: "center",
         borderWidth: 2,
         paddingVertical: 20,
@@ -259,5 +203,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
-
+export default Forgot;
