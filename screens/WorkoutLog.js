@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 //import LogExercise from './../screens/LogExercise';
 import LogExercise from './LogExercise';
@@ -30,6 +30,8 @@ const MyStack = () => {
     );
 };
 
+
+
 function DisplayWorkouts({ popExercise }) {
     const state = {};
 
@@ -40,7 +42,7 @@ function DisplayWorkouts({ popExercise }) {
     const list = () => {
         return workouts.map((exercise) => {
             return (
-                <View key={exercise.number} style={{height: 150,}}>
+                <View key={exercise.number} style={styles.exerciseBubble}>
                     <ExerciseCard 
                         setArray={exercise.sets}
                         exerciseName={exercise.name}
@@ -65,11 +67,27 @@ function DisplayWorkouts({ popExercise }) {
     return <View>{list()}</View>;
 }
 
-
+const deleteDialog = (navigation) =>
+        Alert.alert(
+            "Confirm Operation",
+            "Are you sure you want to delete this workout?",
+            [
+                { text: "Cancel"},
+                { 
+                    text: "Yes",
+                    onPress: () => {
+                        workouts = [];
+                        navigation.goBack()
+                    },
+                }
+            ]
+        );
 
 function WorkoutLog({navigation}) {
     const [count, setCount] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
+
+    
 
     function pushNewExercise(exerciseName) {
         if (workouts.length < 3) {
@@ -100,6 +118,7 @@ function WorkoutLog({navigation}) {
 
     return (
         <SafeAreaView style={styles.container}>
+            
             <Modal visible={modalOpen} animationType="slide">
                 <View style={styles.modalContent}>
                     <TouchableOpacity onPress={() => setModalOpen(false)}>
@@ -108,27 +127,31 @@ function WorkoutLog({navigation}) {
                     <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} />
                 </View>
             </Modal>
+            <ScrollView>
 
-            {/* // here we will add code to reset the data */}
-            <TouchableOpacity onPress={() => navigation.goBack()}> 
-                    <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
-            </TouchableOpacity>
+                {/* // here we will add code to reset the data */}
+                <TouchableOpacity onPress={() => {deleteDialog(navigation);}}> 
+                        <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+                </TouchableOpacity>
 
-            <Header title={"New Workout"} />
-            {/* <View style={styles.titlecontainer}>
-                <Text style={styles.title}>Workout for</Text>
-                <Text style={styles.title}>{currentDay()}</Text>
-            </View> */}
-            <View style={styles.exerciseList}>
-                <DisplayWorkouts popExercise={popExercise} />
-            </View>
+                <Header title={"New Workout"} />
+                {/* <View style={styles.titlecontainer}>
+                    <Text style={styles.title}>Workout for</Text>
+                    <Text style={styles.title}>{currentDay()}</Text>
+                </View> */}
+                <View style={styles.exerciseList}>
+                    <DisplayWorkouts popExercise={popExercise} />
+                </View>
 
-            <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
-                <Text style={styles.addBtnText}>+ Add Exercise</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.logBtn}>
-                <Text style={styles.addBtnText}>LOG Workout</Text>
-            </TouchableOpacity>
+                <View style={{flex: 0.1}}>
+                    <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
+                        <Text style={styles.addBtnText}>Add Exercise</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.logBtn}>
+                        <Text style={styles.logBtnText}>LOG</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
 
 
         </SafeAreaView>
@@ -141,6 +164,7 @@ function currentDay() {
     let year = new Date().getFullYear();
     return month + ' / ' + date + ' / ' + year;
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -162,41 +186,55 @@ const styles = StyleSheet.create({
     // NOTE: THIS FUNCTIONALITY DOES NOT ACCOUNT FOR HAVING LIKE 20 EXERCISES,
     // SO IT DOESNT EXPAND AS IT GETS LARGER AND LARGER
     exerciseList: {
-        flex: 0.5,
-        width: '80%',
+        flex: 1,
+        width: '90%',
         alignSelf: 'center',
-        top: 120,
-        flexDirection: 'column',
+        marginTop: 20,
+        // flexDirection: 'column',
         // backgroundColor: 'red',
         justifyContent: 'space-evenly',
-
     },
     exerciseBubble: {
-        marginTop: 10,
+        height: 200,
         width: '100%',
-        height: 40,
-        backgroundColor: 'grey',
-        borderRadius: 10,
+        marginBottom: 10,
+        alignSelf: 'center',
+
     },
     addBtn: {
-        marginTop: 300,
-        backgroundColor: 'grey',
+        marginTop: 30,
+        marginBottom: 15,
+        borderWidth: 2,
+        borderRadius: 6,
         width: '90%',
-        height: 30,
-        alignSelf: 'center'
+        height: 35,
+        alignSelf: 'center',
+        justifyContent: 'center'
     },
     addBtnText: {
         textAlign: 'center',
-        fontSize: 20,
-        fontWeight: '200',
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto'
     },
     logBtn: {
-        backgroundColor: 'gold',
+        marginBottom: 30,
+        backgroundColor: '#000',
+        borderWidth: 2,
+        borderRadius: 6,
         width: '90%',
-        height: 30,
+        height: 50,
         alignSelf: 'center',
-        position: 'absolute',
-        bottom: 50,
+        justifyContent: 'center',
+        // position: 'absolute',
+        // bottom: 50,
+    },
+    logBtnText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto'
     },
     modalContent: {
         flex: 1,
