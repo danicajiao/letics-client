@@ -66,7 +66,7 @@ const Login = () => {
                 // Signed in 
                 const user = userCredential.user;
                 console.log("Recieved from Firebase:");
-                console.log(user);
+                console.log(user.uid);
                 // if (status !== 'SUCCESS') {
                 //     handleMessage(message, status);
                 // } else {
