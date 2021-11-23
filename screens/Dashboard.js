@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, SafeAreaView, TouchableOpacity, Alert, Platform } from 'react-native';
+import { StyleSheet, View, SafeAreaView, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -19,6 +19,7 @@ import {
 const Dashboard = () => {
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
             <View style={styles.contain}>
                 <SubHeader title={'DAILY WORKOUT HISTORY'} />
