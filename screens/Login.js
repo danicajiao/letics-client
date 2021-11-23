@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
@@ -93,7 +94,7 @@ const Login = () => {
 
     return (
         <KeyboardAvoidingWrapper>
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <StatusBar style="dark" />
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
@@ -153,7 +154,7 @@ const Login = () => {
                         </View>
                     )}
                 </Formik >
-            </View >
+            </SafeAreaView >
         </KeyboardAvoidingWrapper>
     );
 };
@@ -175,12 +176,9 @@ const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, .
     );
 };
 
-const StatusBarHeight = Constants.statusBarHeight;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: StatusBarHeight + 10
     },
     header: {
         fontSize: 40,

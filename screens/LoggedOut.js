@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ImageBackground, Image, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components';
 
@@ -24,7 +25,7 @@ const LoggedOut = () => {
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
             <StatusBar style="light" />
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <View style={styles.darkenImage}>
@@ -45,7 +46,7 @@ const LoggedOut = () => {
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     darkenImage: {
-        flex: 7,
+        flex: 8,
         alignSelf: 'stretch',
         justifyContent: 'center',
         alignItems: 'center',
@@ -73,7 +74,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        paddingBottom: 10
     },
     button: {
         alignItems: "center",

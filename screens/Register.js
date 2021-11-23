@@ -9,6 +9,7 @@ import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
 import app from '../config/firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 // import axios from 'axios';
@@ -92,7 +93,7 @@ const Register = () => {
 
     return (
         <KeyboardAvoidingWrapper>
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <StatusBar style="dark" />
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
@@ -162,7 +163,7 @@ const Register = () => {
                         </View>
                     )}
                 </Formik >
-            </View >
+            </SafeAreaView >
         </KeyboardAvoidingWrapper>
     );
 };
@@ -189,7 +190,6 @@ const StatusBarHeight = Constants.statusBarHeight;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: StatusBarHeight + 10
     },
     header: {
         fontSize: 40,

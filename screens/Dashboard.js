@@ -1,5 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, SafeAreaView, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';

@@ -1,5 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, StatusBar } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Header } from './../components/Header'
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +21,7 @@ const Profile = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar barStyle={'dark-content'} />
             <Header title={'Profile'} />
             <View styles={styles.buttonContainer}>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
