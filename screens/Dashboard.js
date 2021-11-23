@@ -64,8 +64,6 @@ const line = {
     ],
 };
 
-// Weekly view for the current month
-
 const StatusBarHeight = Constants.statusBarHeight;
 
 const styles = StyleSheet.create({
