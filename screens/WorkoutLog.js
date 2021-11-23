@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Octicons } from '@expo/vector-icons';
 //import LogExercise from './../screens/LogExercise';
 import LogExercise from './LogExercise';
@@ -139,6 +140,8 @@ function WorkoutLog({navigation}) {
                     <Text style={styles.title}>Workout for</Text>
                     <Text style={styles.title}>{currentDay()}</Text>
                 </View> */}
+
+                
                 <View style={styles.exerciseList}>
                     <DisplayWorkouts popExercise={popExercise} />
                 </View>
@@ -151,6 +154,7 @@ function WorkoutLog({navigation}) {
                         <Text style={styles.logBtnText}>LOG</Text>
                     </TouchableOpacity>
                 </View>
+                
             </ScrollView>
 
 

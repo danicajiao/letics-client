@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, StatusBar, Image, _Text } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, StatusBar, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth } from "firebase/auth";
@@ -27,7 +27,7 @@ const Profile = () => {
             <View style={styles.testContainer}>
                 {/* <Image style={styles.profileImg}  source={}/> */}
                 <View style={styles.profileImg}>
-                    <Ionicons name={'person'} size={'80%'} color={'gray'} />
+                    <Ionicons name={'person'} size={80} color={'gray'} />
                 </View>
                 <View style={styles.currentUserText}>
                     <Text>Currently logged in as:</Text>
