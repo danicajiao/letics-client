@@ -1,5 +1,18 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator, SectionList, Modal } from 'react-native';
+import {
+     StyleSheet, 
+     Text, 
+     TextInput, 
+     View, 
+     TouchableOpacity, 
+     Alert, 
+     Platform, 
+     StatusBar, 
+     ActivityIndicator, 
+     SectionList, 
+     Modal,
+     Image,
+    } from 'react-native';
 import { Formik } from 'formik';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
@@ -9,25 +22,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
+
 const axios = require('axios').default;
 
-const WorkoutListStack = createStackNavigator();
 
-const WorkoutStack = () => {
-    return (
-        <WorkoutListStack.Navigator>
-            <WorkoutListStack.Screen
-                name="WorkoutList"
-                component={WorkoutsList}
-            >
-
-            </WorkoutListStack.Screen>
-        </WorkoutListStack.Navigator>
-    );
-}
-
-
-const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen }) => {
+const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
     // const [infoModal, setInfoModalOpen] = useState(false);
@@ -105,8 +104,7 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen }) => {
                                 pushNewExercise(item.value); setModalOpen(false) 
                             }
                             else {
-                                console.log("hello");
-                                ExerciseInfo();
+                                navigation.push('ExerciseDetails', {exercise: item})
                             }
                         }
                     }>
@@ -230,7 +228,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: (props => props.type == 'SUCCESS' ? 'green' : 'red')
-    }
+    },
+
 });
 
 export default WorkoutsList;

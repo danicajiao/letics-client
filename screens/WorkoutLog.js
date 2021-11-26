@@ -13,23 +13,31 @@ import ExerciseCard from './../components/ExerciseCard'
 
 let workouts = [];
 
-// native stack navigator for navigating between screens
-const Stack = createNativeStackNavigator();
+import { createStackNavigator } from '@react-navigation/stack';
 
-// stack with 1 route, the LogExercise page
-const MyStack = () => {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="LogExercise"
-                    component={LogExercise}
-                //options={{ title: 'Welcome' }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-};
+// const WorkoutLogStack = createStackNavigator();
+
+// // const WorkoutStack = () => {
+// //     return (
+// //         <WorkoutLogStack.Navigator
+// //             screenOptions={{
+// //                 headerShown: false
+// //             }}
+// //         >
+// //             <WorkoutLogStack.Screen
+// //                 name="WorkoutLog"
+// //                 component={WorkoutLog}
+// //             >
+
+// //             </WorkoutLogStack.Screen>
+// //             <WorkoutLogStack.Screen
+// //                 name="WorkoutList"
+// //                 component={WorkoutsList}
+// //             >
+// //             </WorkoutLogStack.Screen>
+// //         </WorkoutLogStack.Navigator>
+// //     );
+// // }
 
 
 
@@ -126,6 +134,7 @@ function WorkoutLog({navigation}) {
                         <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                     </TouchableOpacity>
                     <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} modalOpen={modalOpen}/>
+                    
                 </View>
             </Modal>
             <ScrollView>
