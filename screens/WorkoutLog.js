@@ -125,7 +125,7 @@ function WorkoutLog({navigation}) {
                     <TouchableOpacity onPress={() => setModalOpen(false)}>
                         <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                     </TouchableOpacity>
-                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} />
+                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} modalOpen={modalOpen}/>
                 </View>
             </Modal>
             <ScrollView>
