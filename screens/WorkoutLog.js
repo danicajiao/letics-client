@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Octicons } from '@expo/vector-icons';
 //import LogExercise from './../screens/LogExercise';
 import LogExercise from './LogExercise';
@@ -12,23 +13,31 @@ import ExerciseCard from './../components/ExerciseCard'
 
 let workouts = [];
 
-// native stack navigator for navigating between screens
-const Stack = createNativeStackNavigator();
+import { createStackNavigator } from '@react-navigation/stack';
 
-// stack with 1 route, the LogExercise page
-const MyStack = () => {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="LogExercise"
-                    component={LogExercise}
-                //options={{ title: 'Welcome' }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-};
+// const WorkoutLogStack = createStackNavigator();
+
+// // const WorkoutStack = () => {
+// //     return (
+// //         <WorkoutLogStack.Navigator
+// //             screenOptions={{
+// //                 headerShown: false
+// //             }}
+// //         >
+// //             <WorkoutLogStack.Screen
+// //                 name="WorkoutLog"
+// //                 component={WorkoutLog}
+// //             >
+
+// //             </WorkoutLogStack.Screen>
+// //             <WorkoutLogStack.Screen
+// //                 name="WorkoutList"
+// //                 component={WorkoutsList}
+// //             >
+// //             </WorkoutLogStack.Screen>
+// //         </WorkoutLogStack.Navigator>
+// //     );
+// // }
 
 
 
@@ -124,7 +133,8 @@ function WorkoutLog({navigation}) {
                     <TouchableOpacity onPress={() => setModalOpen(false)}>
                         <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                     </TouchableOpacity>
-                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} />
+                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} modalOpen={modalOpen}/>
+                    
                 </View>
             </Modal>
             <ScrollView>
@@ -139,6 +149,8 @@ function WorkoutLog({navigation}) {
                     <Text style={styles.title}>Workout for</Text>
                     <Text style={styles.title}>{currentDay()}</Text>
                 </View> */}
+
+                
                 <View style={styles.exerciseList}>
                     <DisplayWorkouts popExercise={popExercise} />
                 </View>
@@ -151,6 +163,7 @@ function WorkoutLog({navigation}) {
                         <Text style={styles.logBtnText}>LOG</Text>
                     </TouchableOpacity>
                 </View>
+                
             </ScrollView>
 
 

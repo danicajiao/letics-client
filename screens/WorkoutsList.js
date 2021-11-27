@@ -1,18 +1,36 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator, SectionList } from 'react-native';
+import {
+     StyleSheet, 
+     Text, 
+     TextInput, 
+     View, 
+     TouchableOpacity, 
+     Alert, 
+     Platform, 
+     StatusBar, 
+     ActivityIndicator, 
+     SectionList, 
+     Modal,
+     Image,
+    } from 'react-native';
 import { Formik } from 'formik';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { AlphabetList } from "react-native-section-alphabet-list";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 
 const axios = require('axios').default;
 
-const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
+
+const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+    // const [infoModal, setInfoModalOpen] = useState(false);
+    // console.log(modalOpen);
 
     // If type is null, we assume the request failed
     const handleMessage = (message, type = 'FAILED') => {
@@ -36,6 +54,9 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+
+
+
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Workouts'} />
             <Formik
@@ -77,7 +98,16 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen }) => {
                     fontSize: 12,
                 }}
                 renderCustomItem={(item) => (
-                    <TouchableOpacity style={styles.listItemContainer} onPress={() => { pushNewExercise(item.value); setModalOpen(false) }}>
+                    <TouchableOpacity style={styles.listItemContainer} 
+                        onPress={() => {
+                            if (modalOpen === true){
+                                pushNewExercise(item.value); setModalOpen(false) 
+                            }
+                            else {
+                                navigation.push('ExerciseDetails', {exercise: item})
+                            }
+                        }
+                    }>
                         <View style={styles.cardImg}></View>
                         <View style={styles.listItemTextContainer}>
                             <Text style={styles.workoutName}>{item.value}</Text>
@@ -198,7 +228,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: (props => props.type == 'SUCCESS' ? 'green' : 'red')
-    }
+    },
+
 });
 
 export default WorkoutsList;
