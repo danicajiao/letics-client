@@ -27,6 +27,11 @@ function beginWeek() {
     return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
+// json parser
+function workoutParser() {
+    // stuff
+}
+
 const Dashboard = () => {
     return (
         <SafeAreaView style={styles.container}>
