@@ -11,16 +11,18 @@ import { getAuth } from '@firebase/auth';
 const image = require('./../assets/img/eduardo-cano-photo-co-AzX5iNFYBMY-unsplash.jpg');
 
 const LoggedOut = () => {
-    const auth = getAuth();
     const navigation = useNavigation();
+    const auth = getAuth();
+
 
     useEffect(() => {
-        auth
-            .signOut()
-            .then(() => {
-            })
-            .catch(error => alert(error.message))
-    }, [])
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.navigate("Home");
+            }
+        })
+        return unsubscribe;
+    }, []);
 
 
 

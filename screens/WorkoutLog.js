@@ -52,7 +52,7 @@ function DisplayWorkouts({ popExercise }) {
         return workouts.map((exercise) => {
             return (
                 <View key={exercise.number} style={styles.exerciseBubble}>
-                    <ExerciseCard 
+                    <ExerciseCard
                         setArray={exercise.sets}
                         exerciseName={exercise.name}
                         onLongPress={() => {
@@ -77,26 +77,26 @@ function DisplayWorkouts({ popExercise }) {
 }
 
 const deleteDialog = (navigation) =>
-        Alert.alert(
-            "Confirm Operation",
-            "Are you sure you want to delete this workout?",
-            [
-                { text: "Cancel"},
-                { 
-                    text: "Yes",
-                    onPress: () => {
-                        workouts = [];
-                        navigation.goBack()
-                    },
-                }
-            ]
-        );
+    Alert.alert(
+        "Confirm Operation",
+        "Are you sure you want to delete this workout?",
+        [
+            { text: "Cancel" },
+            {
+                text: "Yes",
+                onPress: () => {
+                    workouts = [];
+                    navigation.goBack()
+                },
+            }
+        ]
+    );
 
-function WorkoutLog({navigation}) {
+function WorkoutLog({ navigation }) {
     const [count, setCount] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
 
-    
+
 
     function pushNewExercise(exerciseName) {
         if (workouts.length < 3) {
@@ -106,7 +106,7 @@ function WorkoutLog({navigation}) {
                     name: exerciseName,
                     sets: [],
                 }
-                
+
             )
             // console.log(workouts);
             setCount(count + 1);
@@ -127,21 +127,21 @@ function WorkoutLog({navigation}) {
 
     return (
         <SafeAreaView style={styles.container}>
-            
+
             <Modal visible={modalOpen} animationType="slide">
                 <View style={styles.modalContent}>
                     <TouchableOpacity onPress={() => setModalOpen(false)}>
                         <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                     </TouchableOpacity>
-                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} modalOpen={modalOpen}/>
-                    
+                    <WorkoutsList pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} modalOpen={modalOpen} />
+
                 </View>
             </Modal>
             <ScrollView>
 
                 {/* // here we will add code to reset the data */}
-                <TouchableOpacity onPress={() => {deleteDialog(navigation);}}> 
-                        <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+                <TouchableOpacity onPress={() => { deleteDialog(navigation); }}>
+                    <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                 </TouchableOpacity>
 
                 <Header title={"New Workout"} />
@@ -150,12 +150,12 @@ function WorkoutLog({navigation}) {
                     <Text style={styles.title}>{currentDay()}</Text>
                 </View> */}
 
-                
+
                 <View style={styles.exerciseList}>
                     <DisplayWorkouts popExercise={popExercise} />
                 </View>
 
-                <View style={{flex: 0.1}}>
+                <View style={{ flex: 0.1 }}>
                     <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
                         <Text style={styles.addBtnText}>Add Exercise</Text>
                     </TouchableOpacity>
@@ -163,7 +163,7 @@ function WorkoutLog({navigation}) {
                         <Text style={styles.logBtnText}>LOG</Text>
                     </TouchableOpacity>
                 </View>
-                
+
             </ScrollView>
 
 
@@ -228,7 +228,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
-        fontFamily: 'Roboto'
     },
     logBtn: {
         marginBottom: 30,
@@ -247,7 +246,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         fontWeight: 'bold',
-        fontFamily: 'Roboto'
     },
     modalContent: {
         flex: 1,

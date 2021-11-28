@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import {
-     StyleSheet, 
-     Text, 
-     TextInput, 
-     View, 
-     TouchableOpacity, 
-     Alert, 
-     Platform, 
-     StatusBar, 
-     ActivityIndicator, 
-     SectionList, 
-     Modal,
-     Image,
-    } from 'react-native';
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    TouchableOpacity,
+    Alert,
+    Platform,
+    StatusBar,
+    ActivityIndicator,
+    SectionList,
+    Modal,
+    Image,
+} from 'react-native';
 import { Formik } from 'formik';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
@@ -25,8 +25,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const axios = require('axios').default;
 
-
-const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) => {
+const WorkoutsList = ({ values, setFieldValue, pushNewExercise, setModalOpen, showWorkoutInfo = true }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
     // const [infoModal, setInfoModalOpen] = useState(false);
@@ -36,6 +35,42 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) 
     const handleMessage = (message, type = 'FAILED') => {
         setMessage(message);
         setMessageType(type)
+    }
+
+    const ItemWithoutInfo = ({ item, pushNewExercise }) => {
+        return (
+            <TouchableOpacity style={styles.listItemContainer} onPress={() => {
+                setFieldValue('exercises', [...values.exercises, pushNewExercise(item.value)])
+                setModalOpen(false)
+                // console.log(values)
+            }}>
+                <View style={styles.cardImg}></View>
+                <View style={styles.listItemTextContainer}>
+                    <Text style={styles.workoutName}>{item.value}</Text>
+                    <Text style={styles.workoutType}>{item.type}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    const ItemWithInfo = ({ item }) => {
+        return (
+            <TouchableOpacity style={styles.listItemContainer} >
+                <View style={styles.cardImg}></View>
+                <View style={styles.listItemTextContainer}>
+                    <Text style={styles.workoutName}>{item.value}</Text>
+                    <Text style={styles.workoutType}>{item.type}</Text>
+                </View>
+            </TouchableOpacity >
+        );
+    }
+
+    const renderSectionHeader = (section) => {
+        return (
+            <View style={styles.sectionHeaderContainer}>
+                <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
+            </View>
+        );
     }
 
     const data = [
@@ -53,10 +88,7 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) 
     ]
 
     return (
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-
-
-
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']} >
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Workouts'} />
             <Formik
@@ -90,38 +122,31 @@ const WorkoutsList = ({ pushNewExercise, setModalOpen, modalOpen, navigation }) 
                     </View>
                 )}
             </Formik >
-            <AlphabetList
-                style={{ flex: 1 }}
-                data={data}
-                indexLetterStyle={{
-                    color: 'black',
-                    fontSize: 12,
-                }}
-                renderCustomItem={(item) => (
-                    <TouchableOpacity style={styles.listItemContainer} 
-                        onPress={() => {
-                            if (modalOpen === true){
-                                pushNewExercise(item.value); setModalOpen(false) 
-                            }
-                            else {
-                                navigation.push('ExerciseDetails', {exercise: item})
-                            }
-                        }
-                    }>
-                        <View style={styles.cardImg}></View>
-                        <View style={styles.listItemTextContainer}>
-                            <Text style={styles.workoutName}>{item.value}</Text>
-                            <Text style={styles.workoutType}>{item.type}</Text>
-                        </View>
-                    </TouchableOpacity>
-                )
-                }
-                renderCustomSectionHeader={(section) => (
-                    <View style={styles.sectionHeaderContainer}>
-                        <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
-                    </View>
-                )}
-            />
+            {showWorkoutInfo && (
+                <AlphabetList
+                    style={{ flex: 1 }}
+                    data={data}
+                    indexLetterStyle={{
+                        color: 'black',
+                        fontSize: 12,
+                    }}
+                    renderCustomItem={(item) => <ItemWithInfo item={item} />}
+                    renderCustomSectionHeader={renderSectionHeader}
+                />
+            )}
+            {!showWorkoutInfo && (
+                <AlphabetList
+                    style={{ flex: 1 }}
+                    data={data}
+                    indexLetterStyle={{
+                        color: 'black',
+                        fontSize: 12,
+                    }}
+                    renderCustomItem={(item) => <ItemWithoutInfo item={item} pushNewExercise={pushNewExercise} />}
+                    renderCustomSectionHeader={renderSectionHeader}
+                />
+            )}
+
         </SafeAreaView >
     );
 };

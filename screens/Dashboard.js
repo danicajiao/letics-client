@@ -58,8 +58,8 @@ const Dashboard = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
-            <SubHeader title={'DAILY WORKOUT HISTORY'}/>
-            <SubHeader title={ beginWeek() }/>
+            <SubHeader title={'DAILY WORKOUT HISTORY'} />
+            <SubHeader title={beginWeek()} />
             <LineChart
                 data={line}
                 width={380} // from react-native
@@ -82,7 +82,7 @@ const Dashboard = () => {
                     borderRadius: 16
                 }}
             />
-            <View style={{flex: 0.1}}>
+            <View style={{ flex: 0.1 }}>
                 <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
                     <Text style={styles.logBtnText}>Benchpress</Text>
                 </TouchableOpacity>
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
-        fontFamily: 'Roboto'
     },
     logBtn: {
         marginBottom: 20,
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         fontWeight: 'bold',
-        fontFamily: 'Roboto'
     },
     modalContent: {
         flex: 1,
