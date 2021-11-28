@@ -33,7 +33,6 @@ state = {
 };
 
 // fetch your own data
-/** 
 get_chart = () => {
     // url for fetching data
     fetch('http://blah...', {
@@ -48,12 +47,13 @@ get_chart = () => {
         this.setState({datasource:response})
     })
     .catch(error => {});
-}**/
+}
 
 //Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
-    //if (this.state.datasource) {
-    //if (this.state.datasource.length) {
+    if (this.state.datasource) {
+    if (this.state.datasource.length) {
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
@@ -61,10 +61,23 @@ const Dashboard = () => {
             <SubHeader title={'DAILY WORKOUT HISTORY'} />
             <SubHeader title={beginWeek()} />
             <LineChart
-                data={line}
-                width={380} // from react-native
+                //data={line}
+                data={{
+                    // x-axis data
+                    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                    datasets: [{
+                        data: this.state.datasource.map(item=>{
+                            return (
+                                // y-axis data
+                                item.rpms // rpms means rep maxes
+                            )
+                        })
+                    }]
+                }}
+                width={220} // from react-native
                 height={220}
-                yAxisLabel={''}
+                //yAxisLabel={''}
+                yAxisLabel="lbs"
                 chartConfig={{
                     backgroundColor: '#e26a00',
                     backgroundGradientFrom: '#fb8c00',
@@ -95,7 +108,7 @@ const Dashboard = () => {
             </View>
         </SafeAreaView >
     );
-};
+}; }}
 
 // prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
