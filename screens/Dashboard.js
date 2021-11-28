@@ -6,7 +6,6 @@ import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
-import { CustomButton } from './../components/CustomButton';
 import { SubHeader } from '../components/SubHeader';
 import {
     LineChart,
@@ -27,12 +26,34 @@ function beginWeek() {
     return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-// json parser
-function workoutParser() {
-    // stuff
-}
+// state which has an array to store values
+state = {
+    // holds data for plotting
+    datasource: []
+};
 
+// fetch your own data
+/** 
+get_chart = () => {
+    // url for fetching data
+    fetch('http://blah...', {
+        method: 'GET',
+        headers: {
+            Accept: '...',
+            'Content-Type': '...',
+        },
+    })
+    .then(response => response.json())
+    .then(response => {
+        this.setState({datasource:response})
+    })
+    .catch(error => {});
+}**/
+
+//Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
+    //if (this.state.datasource) {
+    //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
@@ -76,7 +97,7 @@ const Dashboard = () => {
     );
 };
 
-// prototype plot for daily fluctuations in weight
+// prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
 // need to make it work with database
 const line = {
