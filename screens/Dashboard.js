@@ -35,6 +35,8 @@ state = {
 // fetch your own data
 get_chart = () => {
     // url for fetching data
+    //
+    /**
     fetch('http://blah...', {
         method: 'GET',
         headers: {
@@ -46,7 +48,7 @@ get_chart = () => {
     .then(response => {
         this.setState({datasource:response})
     })
-    .catch(error => {});
+    .catch(error => {});**/
 }
 
 //Dashboard will be dynamic due to the linechart 

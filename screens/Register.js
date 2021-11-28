@@ -11,7 +11,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as yup from 'yup'
-import axios from 'axios';
+import axios from 'axios'; // for http request processing
 
 // const axios = require('axios').default;
 
@@ -33,7 +33,7 @@ const Register = () => {
 
     const handleRegister = (credentials, setSubmitting) => {
         const localurl = 'http://localhost:3000/';
-        const testurl = 'http://192.168.1.105:3000/';
+        const testurl = 'http://10.115.194.36:3000/';
         const remoteurl = 'https://letics.herokuapp.com/';
 
         handleMessage(null);
@@ -52,7 +52,7 @@ const Register = () => {
                 console.log(userObject);
 
                 // Ensure that this points to the correct url when in testing or production
-                axios.post(localurl + 'record/add', userObject)
+                axios.post(testurl + 'record/add', userObject)
                     .then((response) => {
                         const result = response.data;
                         const { status, message, data, mongdb } = result;
