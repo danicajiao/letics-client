@@ -15,7 +15,7 @@ const Profile = () => {
         auth
             .signOut()
             .then(() => {
-                navigation.replace("LoggedOut");
+                navigation.navigate("LoggedOut");
             })
             .catch(error => alert(error.message))
     }
