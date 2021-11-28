@@ -11,8 +11,9 @@ import Dashboard from './Dashboard';
 import History from './History';
 import WorkoutsList from './WorkoutsList';
 import Profile from './Profile';
+import NewExercise from './NewExercise';
 
-const CreateNewPlaceholder = () => <View />
+const Placeholder = () => <View />
 
 // navigation bar component
 const Tab = createBottomTabNavigator();
@@ -32,10 +33,9 @@ const RootStackScreen = () => {
                 name="Tabs"
                 component={Home}
             />
-
             <RootStack.Screen
-                name="WorkoutLog"
-                component={WorkoutLog}
+                name="NewExercise"
+                component={NewExercise}
                 options={{ animationEnabled: true }}
             />
         </RootStack.Navigator>
@@ -56,7 +56,7 @@ const Home = () => {
                     <Ionicons name="time" size={24} color="black" />
                 ),
             }} />
-            <Tab.Screen name="Add" component={CreateNewPlaceholder} options={{
+            <Tab.Screen name="Add" component={Placeholder} options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ color }) => (
                     <View
@@ -76,16 +76,10 @@ const Home = () => {
                 listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
-                        navigation.navigate("WorkoutLog");
+                        navigation.navigate("NewExercise");
                     }
                 })}
             />
-            {/* <Tab.Screen name="LogExercise" component={LogExercise} options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="barbell" size={24} color="black" />
-                ),
-                headerShown: false,
-            }} /> */}
             <Tab.Screen name="Workouts" component={WorkoutsList} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell" size={24} color="black" />
