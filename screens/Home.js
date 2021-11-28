@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient'; // yellow linear gradient for button
-
+import WorkoutStack from './WorkoutStack';
 import WorkoutLog from './WorkoutLog';
 import Dashboard from './Dashboard';
 import History from './History';
@@ -80,7 +80,13 @@ const Home = () => {
                     }
                 })}
             />
-            <Tab.Screen name="Workouts" component={WorkoutsList} options={{
+            {/* <Tab.Screen name="LogExercise" component={LogExercise} options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="barbell" size={24} color="black" />
+                ),
+                headerShown: false,
+            }} /> */}
+            <Tab.Screen name="Workouts" component={WorkoutStack} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell" size={24} color="black" />
                 )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Constants from 'expo-constants';
@@ -17,14 +17,28 @@ import {
     StackedBarChart
 } from 'react-native-chart-kit'
 
+// beginning of current week
+function beginWeek() {
+    // cool calculation to get first day of week (anchor date)
+    let date = new Date();
+    let day = date.getDay() || 7;
+    if (day !== 1)
+        date.setHours(-24 * (day - 1));
+    return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+}
+
+// json parser
+function workoutParser() {
+    // stuff
+}
+
 const Dashboard = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
-            <View style={styles.contain}>
-                <SubHeader title={'DAILY WORKOUT HISTORY'} />
-            </View>
+            <SubHeader title={'DAILY WORKOUT HISTORY'} />
+            <SubHeader title={beginWeek()} />
             <LineChart
                 data={line}
                 width={380} // from react-native
@@ -47,6 +61,17 @@ const Dashboard = () => {
                     borderRadius: 16
                 }}
             />
+            <View style={{ flex: 0.1 }}>
+                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
+                    <Text style={styles.logBtnText}>Benchpress</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Squat chart')}>
+                    <Text style={styles.logBtnText}>Squat</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Deadlift chart')}>
+                    <Text style={styles.logBtnText}>Deadlift</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView >
     );
 };
@@ -69,54 +94,100 @@ const StatusBarHeight = Constants.statusBarHeight;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    header: {
-        fontSize: 40,
-        fontWeight: 'bold'
+        marginVertical: -14
     },
     backIcon: {
         paddingLeft: 20,
         paddingTop: 20
     },
-    forms: {
+    titlecontainer: {
+        alignSelf: 'center',
+        top: 100,
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    // NOTE: THIS FUNCTIONALITY DOES NOT ACCOUNT FOR HAVING LIKE 20 EXERCISES,
+    // SO IT DOESNT EXPAND AS IT GETS LARGER AND LARGER
+    exerciseList: {
         flex: 1,
-        paddingTop: 20,
-        alignItems: 'center'
-    },
-    formArea: {
-        width: "90%",
-    },
-    leftIcon: {
-        left: 15,
-        top: 35,
-        position: 'absolute',
-        zIndex: 1,
-        elevation: (Platform.OS === 'android') ? 50 : 0
-    },
-    inputLabel: {
-        color: Colors.tertiary,
-        fontSize: 13,
-        textAlign: 'left'
-    },
-    textInput: {
-        backgroundColor: Colors.secondary,
-        padding: 15,
-        paddingLeft: 55,
-        paddingRight: 55,
-        borderRadius: 5,
-        fontSize: 16,
-        height: 60,
-        marginVertical: 3,
-        marginBottom: 10,
-        color: Colors.tertiary,
-    },
-    button: {
-        backgroundColor: '#000000',
         width: '90%',
+        alignSelf: 'center',
+        marginTop: 20,
+        // flexDirection: 'column',
+        // backgroundColor: 'red',
+        justifyContent: 'space-evenly',
     },
-    buttonText: {
-        color: '#ffffff'
-    }
-});
+    exerciseBubble: {
+        height: 200,
+        width: '100%',
+        marginBottom: 10,
+        alignSelf: 'center',
+
+    },
+    addBtn: {
+        marginTop: 30,
+        marginBottom: 15,
+        borderWidth: 2,
+        borderRadius: 6,
+        width: '90%',
+        height: 35,
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    addBtnText: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    logBtn: {
+        marginBottom: 20,
+        backgroundColor: '#000',
+        borderWidth: 2,
+        borderRadius: 6,
+        width: '90%',
+        height: 50,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        // position: 'absolute',
+        // bottom: 50,
+    },
+    logBtnText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    modalContent: {
+        flex: 1,
+    },
+    modalList: {
+        flex: 0.5,
+        top: 25,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        // backgroundColor: 'red',
+    },
+    modalExercise: {
+        width: '90%',
+        backgroundColor: 'grey',
+        height: 70,
+        borderRadius: 10,
+    },
+    modalText: {
+        top: 20,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: '200',
+    },
+    exerciseText: {
+        top: 5,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: '200',
+    },
+})
 
 export default Dashboard;
