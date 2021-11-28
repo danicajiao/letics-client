@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import { Formik } from 'formik';
-//import LogExercise from './../screens/LogExercise';
-import LogExercise from './LogExercise';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 import WorkoutsList from './WorkoutsList';
 import { Header } from './../components/Header';
 import ExerciseCard from './../components/ExerciseCard'
@@ -42,6 +37,23 @@ const NewExercise = ({ navigation }) => {
         sets: []
     });
 
+    const exerciseSchema = yup.object().shape({
+        exercises: yup.array().of(
+            yup.object().shape({
+                sets: yup.array().of(
+                    yup.object().shape({
+                        weight: yup.number()
+                            .min(1, "Minimum weight is 1")
+                            .required("Enter a weight"),
+                        reps: yup.number()
+                            .min(1, "Minimum reps is 1")
+                            .required("Enter number of reps")
+                    })
+                ).min(1, "Needs at least 1 set")
+            })
+        ).min(1, "Needs at least 1 exercise")
+    });
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -54,17 +66,22 @@ const NewExercise = ({ navigation }) => {
                         console.log(values);
                         resetForm();
                     }}
-                // validationSchema={validationSchema}
+                    validationSchema={exerciseSchema}
                 >
-                    {({ handleChange, handleBlur, handleSubmit, handleReset, values, isSubmitting, errors, setFieldValue }) => (
+                    {({ values, handleChange, handleBlur, handleSubmit, handleReset, isSubmitting, setFieldValue, errors, touched }) => (
                         <View>
-
                             <Modal visible={modalOpen} animationType="slide">
                                 <SafeAreaView style={styles.modalContent}>
                                     <TouchableOpacity onPress={() => setModalOpen(false)}>
                                         <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
                                     </TouchableOpacity>
-                                    <WorkoutsList values={values} setFieldValue={setFieldValue} pushNewExercise={pushNewExercise} setModalOpen={setModalOpen} showWorkoutInfo={false} />
+                                    <WorkoutsList
+                                        values={values}
+                                        setFieldValue={setFieldValue}
+                                        pushNewExercise={pushNewExercise}
+                                        modalOpen={modalOpen}
+                                        setModalOpen={setModalOpen}
+                                    />
                                 </SafeAreaView>
                             </Modal>
 
@@ -75,7 +92,14 @@ const NewExercise = ({ navigation }) => {
 
                             {/* {console.log("WorkoutLog Rendered!")} */}
 
-                            <ExerciseList values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} />
+                            <ExerciseList
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                errors={errors}
+                                touched={touched}
+                            />
 
                             <View style={{ flex: 0.1 }}>
                                 <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
@@ -85,6 +109,14 @@ const NewExercise = ({ navigation }) => {
                                     <Text style={styles.logBtnText}>LOG</Text>
                                 </TouchableOpacity>
                             </View>
+                            <View style={styles.errorContainer}>
+                                <Text style={styles.message}>{JSON.stringify(errors, null, 2)}</Text>
+                            </View>
+                            {!Array.isArray(errors.exercises) && touched.exercises &&
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.exercises}</Text>
+                                </View>
+                            }
                         </View>
                     )}
                 </Formik>
@@ -93,11 +125,58 @@ const NewExercise = ({ navigation }) => {
     );
 }
 
-const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur }) => {
+const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors, touched }) => {
+    // const errorsList = errors.exercises.length > 0 ? errors.exercises.map((error) => {
+    //     return (
+    //         <View>
+    //             <View style={styles.errorContainer}>
+    //                 <Text style={styles.message}>{error}</Text>
+    //             </View>
+    //         </View>
+    //     );
+    // }) : null;
+
+    const exerciseError = (errors, index, touched) => {
+        if (JSON.stringify(errors) !== '{}') {
+            if (!Array.isArray(errors.exercises[index].sets)) {
+                return (
+                    <View style={styles.errorContainer}>
+                        <Text style={styles.message}>{errors.exercises[index].sets}</Text>
+                    </View>
+                );
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
     const list = values.exercises.length > 0 ? values.exercises.map((exercise, index) => {
         return (
             // <Text key={exercise}>{exercise.name}</Text>
-            <ExerciseCard key={index} values={values} exerciseIndex={index} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} />
+            <View key={index}>
+                <ExerciseCard
+                    values={values}
+                    exerciseIndex={index}
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                />
+
+                {console.log(JSON.stringify(errors))}
+
+                {/* {exerciseError(errors, index, touched)} */}
+
+
+                {/* {Array.isArray(errors.exercises[index].sets) && touched.exercises[index].sets &&
+                    <View style={styles.errorContainer}>
+                        <Text style={styles.message}>This exercise has missing values</Text>
+                    </View>
+                } */}
+
+            </View >
+
         );
     }) :
         <View style={styles.noExercisesContainer}>
@@ -217,10 +296,18 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '200',
     },
+    errorContainer: {
+        backgroundColor: 'rgb(245, 216, 218)',
+        borderRadius: 5,
+        marginBottom: '2%',
+        width: '90%',
+        alignSelf: 'center'
+    },
     message: {
-        textAlign: 'center',
-        fontSize: 16,
-        color: 'red'
+        // textAlign: 'center',
+        fontSize: 13,
+        paddingVertical: '2%',
+        color: 'rgb(105, 35, 38)'
     },
     noExercisesContainer: {
         backgroundColor: '#F3F3F3',
@@ -229,6 +316,7 @@ const styles = StyleSheet.create({
     },
     noExercisesMessage: {
         textAlign: 'center'
-    }
+    },
+
 })
 export default NewExercise;
