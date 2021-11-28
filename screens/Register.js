@@ -10,11 +10,10 @@ import app from '../config/firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as yup from 'yup'
+import axios from 'axios';
 
-
-// import axios from 'axios';
-
-const axios = require('axios').default;
+// const axios = require('axios').default;
 
 const Register = () => {
     const [hidePassword, setHidePassword] = useState(true);
@@ -33,45 +32,46 @@ const Register = () => {
     }, []);
 
     const handleRegister = (credentials, setSubmitting) => {
-        // const localurl = 'http://localhost:3000/';
+        const localurl = 'http://localhost:3000/';
         const testurl = 'http://192.168.1.105:3000/';
         const remoteurl = 'https://letics.herokuapp.com/';
 
         handleMessage(null);
 
-        // // Ensure that this points to the correct url when in testing or production
-        // axios.post(testurl + 'record/add', credentials)
-        //     .then((response) => {
-        //         const result = response.data;
-        //         const { status, message, data, mongdb } = result;
-
-        //         console.log("Recieved from server:");
-        //         console.log(result);
-
-        //         if (status !== 'SUCCESS') {
-        //             handleMessage(message, status);
-        //         } else {
-        //             // TODO: Navigate to dashboard
-        //         }
-        //         setSubmitting(false);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         setSubmitting(false);
-        //         handleMessage("An error occured. Check your network and try again.");
-        //     });
         createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
                 console.log("UID recieved from Firebase:");
-                console.log(auth.currentUser.uid);
+                console.log(user.uid);
+                const userObject = {
+                    firebase_uid: user.uid,
+                    workouts: []
+                }
+                console.log("Submitted to server:");
+                console.log(userObject);
 
-                // if (status !== 'SUCCESS') {
-                //     handleMessage(message, status);
-                // } else {
-                //     // TODO: Navigate to dashboard
-                // }
+                // Ensure that this points to the correct url when in testing or production
+                axios.post(localurl + 'record/add', userObject)
+                    .then((response) => {
+                        const result = response.data;
+                        const { status, message, data, mongdb } = result;
+
+                        console.log("Recieved from server:");
+                        console.log(result);
+
+                        if (status !== 'SUCCESS') {
+                            handleMessage(message, status);
+                        } else {
+                            // TODO: Navigate to dashboard
+                        }
+                        setSubmitting(false);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        setSubmitting(false);
+                        handleMessage("An error occured. Check your network and try again.");
+                    });
                 setSubmitting(false);
 
             })
@@ -91,6 +91,28 @@ const Register = () => {
         setMessageType(type)
     }
 
+    const registerSchema = yup.object().shape({
+        username: yup.string()
+            .matches(/^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/,
+                "Invalid username:\n" +
+                "1. Must contain 8 to 20 characters\n" +
+                "2. Only contains letters, _ and .\n" +
+                "3. Cannot start or end with _ or .\n" +
+                "4. _ and . can't be next to each other")
+            .required('Enter a username'),
+        email: yup.string()
+            .email('Enter a valid email')
+            .required('Enter an email'),
+        password: yup.string()
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/,
+                "Invalid password:\n" +
+                "1. Must contain 6 characters\n" +
+                "2. One uppercase letter\n" +
+                "3. One lowercase letter\n" +
+                "4. One number\n5. One special character")
+            .required('Enter a password')
+    });
+
     return (
         <KeyboardAvoidingWrapper>
             <SafeAreaView style={styles.container}>
@@ -101,20 +123,14 @@ const Register = () => {
                 <Header title={'Register'} />
                 <Formik
                     initialValues={{ username: '', email: '', password: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        console.log('Submitted to server:');
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                        console.log('Submitted to Firebase:');
                         console.log(values);
-
-                        // Input checks
-                        if (values.username == '' || values.email == '' || values.password == '') {
-                            handleMessage("Please fill in the fields");
-                            setSubmitting(false);
-                        } else {
-                            handleRegister(values, setSubmitting);
-                        }
+                        handleRegister(values, setSubmitting);
                     }}
+                    validationSchema={registerSchema}
                 >
-                    {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                    {({ values, handleChange, handleBlur, handleSubmit, isSubmitting, errors, touched }) => (
                         <View style={styles.forms}>
                             <MyTextInput
                                 label='Username'
@@ -125,7 +141,14 @@ const Register = () => {
                                 onBlur={handleBlur('username')}
                                 value={values.username}
                                 keyboardType='default'
+                                wasTouched={touched.username}
+                                error={errors.username}
                             />
+                            {errors.username && touched.username && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.username}</Text>
+                                </View>
+                            )}
                             <MyTextInput
                                 label='Email Address'
                                 icon='mail'
@@ -135,7 +158,14 @@ const Register = () => {
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType="email-address"
+                                wasTouched={touched.email}
+                                error={errors.email}
                             />
+                            {errors.email && touched.email && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.email}</Text>
+                                </View>
+                            )}
                             <MyTextInput
                                 label='Password'
                                 icon='lock'
@@ -148,7 +178,14 @@ const Register = () => {
                                 isPassword={true}
                                 hidePassword={hidePassword}
                                 setHidePassword={setHidePassword}
+                                wasTouched={touched.password}
+                                error={errors.password}
                             />
+                            {errors.password && touched.password && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.password}</Text>
+                                </View>
+                            )}
                             {!isSubmitting && (
                                 <TouchableOpacity style={styles.registerButton} onPress={handleSubmit}>
                                     <Text style={styles.buttonText}>SIGN UP</Text>
@@ -159,7 +196,11 @@ const Register = () => {
                                     <ActivityIndicator size='small' color='white' />
                                 </TouchableOpacity>
                             )}
-                            <Text type={messageType} style={styles.message}>{message}</Text>
+                            {message && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{message}</Text>
+                                </View>
+                            )}
                         </View>
                     )}
                 </Formik >
@@ -168,14 +209,30 @@ const Register = () => {
     );
 };
 
-const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, wasTouched, error, ...props }) => {
+    const labelStyleOnError = () => {
+        if (wasTouched && error) {
+            return { color: 'red' }
+        } else {
+            return { color: 'black' }
+        }
+    };
+
+    const borderStyleOnError = () => {
+        if (wasTouched && error) {
+            return { borderColor: 'red' }
+        } else {
+            return { borderColor: 'black' }
+        }
+    }
+
     return (
         <View style={styles.formArea}>
-            <Text style={styles.inputLabel}>{label}</Text>
+            <Text style={[styles.inputLabel, labelStyleOnError()]}>{label}</Text>
             <View style={styles.leftIcon}>
                 <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
-            <TextInput autoCapitalize="none" autoCorrect={false} style={styles.textInput} {...props} />
+            <TextInput autoCapitalize="none" autoCorrect={false} style={[styles.textInput, borderStyleOnError()]} {...props} />
             {isPassword && (
                 <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
                     <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />
@@ -248,15 +305,23 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#000000',
         width: '90%',
+        marginBottom: '5%'
     },
     buttonText: {
         color: '#ffffff',
         fontWeight: 'bold'
     },
+    errorContainer: {
+        backgroundColor: 'rgb(245, 216, 218)',
+        width: '90%',
+        borderRadius: 5,
+        marginBottom: '2%'
+    },
     message: {
         textAlign: 'center',
-        fontSize: 16,
-        color: (props => props.type == 'SUCCESS' ? 'green' : 'red')
+        fontSize: 13,
+        paddingVertical: '2%',
+        color: 'rgb(105, 35, 38)'
     }
 });
 

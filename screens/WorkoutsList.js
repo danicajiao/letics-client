@@ -20,12 +20,13 @@ import { Header } from './../components/Header';
 import { AlphabetList } from "react-native-section-alphabet-list";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
 
 
 const axios = require('axios').default;
 
-const WorkoutsList = ({ values, setFieldValue, pushNewExercise, setModalOpen, showWorkoutInfo = true }) => {
+const WorkoutsList = ({ values, setFieldValue, pushNewExercise, modalOpen, setModalOpen, navigation }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
     // const [infoModal, setInfoModalOpen] = useState(false);
@@ -37,11 +38,15 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, setModalOpen, sh
         setMessageType(type)
     }
 
-    const ItemWithoutInfo = ({ item, pushNewExercise }) => {
+    const CustomItem = ({ item, pushNewExercise, modalOpen, setModalOpen }) => {
         return (
             <TouchableOpacity style={styles.listItemContainer} onPress={() => {
-                setFieldValue('exercises', [...values.exercises, pushNewExercise(item.value)])
-                setModalOpen(false)
+                if (modalOpen) {
+                    setFieldValue('exercises', [...values.exercises, pushNewExercise(item.value)])
+                    setModalOpen(false)
+                } else {
+                    navigation.push("ExerciseDetails", { exercise: item })
+                }
                 // console.log(values)
             }}>
                 <View style={styles.cardImg}></View>
@@ -50,19 +55,7 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, setModalOpen, sh
                     <Text style={styles.workoutType}>{item.type}</Text>
                 </View>
             </TouchableOpacity>
-        );
-    }
-
-    const ItemWithInfo = ({ item }) => {
-        return (
-            <TouchableOpacity style={styles.listItemContainer} >
-                <View style={styles.cardImg}></View>
-                <View style={styles.listItemTextContainer}>
-                    <Text style={styles.workoutName}>{item.value}</Text>
-                    <Text style={styles.workoutType}>{item.type}</Text>
-                </View>
-            </TouchableOpacity >
-        );
+        )
     }
 
     const renderSectionHeader = (section) => {
@@ -122,30 +115,16 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, setModalOpen, sh
                     </View>
                 )}
             </Formik >
-            {showWorkoutInfo && (
-                <AlphabetList
-                    style={{ flex: 1 }}
-                    data={data}
-                    indexLetterStyle={{
-                        color: 'black',
-                        fontSize: 12,
-                    }}
-                    renderCustomItem={(item) => <ItemWithInfo item={item} />}
-                    renderCustomSectionHeader={renderSectionHeader}
-                />
-            )}
-            {!showWorkoutInfo && (
-                <AlphabetList
-                    style={{ flex: 1 }}
-                    data={data}
-                    indexLetterStyle={{
-                        color: 'black',
-                        fontSize: 12,
-                    }}
-                    renderCustomItem={(item) => <ItemWithoutInfo item={item} pushNewExercise={pushNewExercise} />}
-                    renderCustomSectionHeader={renderSectionHeader}
-                />
-            )}
+            <AlphabetList
+                style={{ flex: 1 }}
+                data={data}
+                indexLetterStyle={{
+                    color: 'black',
+                    fontSize: 12,
+                }}
+                renderCustomItem={(item) => <CustomItem item={item} pushNewExercise={pushNewExercise} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
+                renderCustomSectionHeader={renderSectionHeader}
+            />
 
         </SafeAreaView >
     );

@@ -9,6 +9,7 @@ import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
+import * as yup from 'yup'
 
 const axios = require('axios').default;
 
@@ -34,7 +35,7 @@ const Login = () => {
 
 
     const handleLogin = (credentials, setSubmitting) => {
-        // const localurl = 'http://localhost:3000/';
+        const localurl = 'http://localhost:3000/';
         const testurl = 'http://192.168.1.105:3000/';
         const remoteurl = 'https://letics.herokuapp.com/';
 
@@ -65,15 +66,9 @@ const Login = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                console.log("Recieved from Firebase:");
+                console.log("UID recieved from Firebase:");
                 console.log(user.uid);
-                // if (status !== 'SUCCESS') {
-                //     handleMessage(message, status);
-                // } else {
-                //     // TODO: Navigate to dashboard
-                // }
                 setSubmitting(false);
-
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -92,6 +87,14 @@ const Login = () => {
         setMessageType(type)
     }
 
+    const loginSchema = yup.object().shape({
+        email: yup.string()
+            .email('Enter a valid email')
+            .required('Enter an email'),
+        password: yup.string()
+            .required('Enter a password')
+    });
+
     return (
         <KeyboardAvoidingWrapper>
             <SafeAreaView style={styles.container}>
@@ -102,20 +105,22 @@ const Login = () => {
                 <Header title={'Log In'} />
                 <Formik
                     initialValues={{ email: '', password: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
                         console.log('Submitted to server:');
                         console.log(values);
+                        handleLogin(values, setSubmitting);
 
-                        // Input checks
-                        if (values.email == '' || values.password == '') {
-                            handleMessage("Please fill in the fields");
-                            setSubmitting(false);
-                        } else {
-                            handleLogin(values, setSubmitting);
-                        }
+                        // // Input checks
+                        // if (values.email == '' || values.password == '') {
+                        //     handleMessage("Please fill in the fields");
+                        //     setSubmitting(false);
+                        // } else {
+                        //     handleLogin(values, setSubmitting);
+                        // }
                     }}
+                    validationSchema={loginSchema}
                 >
-                    {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                    {({ values, handleChange, handleBlur, handleSubmit, isSubmitting, errors, touched }) => (
                         <View style={styles.forms}>
                             <MyTextInput
                                 label='Email Address'
@@ -126,7 +131,14 @@ const Login = () => {
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType="email-address"
+                                wasTouched={touched.email}
+                                error={errors.email}
                             />
+                            {errors.email && touched.email && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.email}</Text>
+                                </View>
+                            )}
                             <MyTextInput
                                 label='Password'
                                 icon='lock'
@@ -139,7 +151,14 @@ const Login = () => {
                                 isPassword={true}
                                 hidePassword={hidePassword}
                                 setHidePassword={setHidePassword}
+                                wasTouched={touched.password}
+                                error={errors.password}
                             />
+                            {errors.password && touched.password && (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.message}>{errors.password}</Text>
+                                </View>
+                            )}
                             {!isSubmitting && (
                                 <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
                                     <Text style={styles.buttonText}>LOG IN</Text>
@@ -162,14 +181,30 @@ const Login = () => {
     );
 };
 
-const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, wasTouched, error, ...props }) => {
+    const labelStyleOnError = () => {
+        if (wasTouched && error) {
+            return { color: 'red' }
+        } else {
+            return { color: 'black' }
+        }
+    };
+
+    const borderStyleOnError = () => {
+        if (wasTouched && error) {
+            return { borderColor: 'red' }
+        } else {
+            return { borderColor: 'black' }
+        }
+    }
+
     return (
         <View style={styles.formArea}>
-            <Text style={styles.inputLabel}>{label}</Text>
+            <Text style={[styles.inputLabel, labelStyleOnError()]}>{label}</Text>
             <View style={styles.leftIcon}>
                 <Octicons name={icon} size={20} color={Colors.darkLight} />
             </View>
-            <TextInput autoCapitalize="none" autoCorrect={false} style={styles.textInput} {...props} />
+            <TextInput autoCapitalize="none" autoCorrect={false} style={[styles.textInput, borderStyleOnError()]} {...props} />
             {isPassword && (
                 <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
                     <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={20} color={Colors.darkLight} />
@@ -252,10 +287,17 @@ const styles = StyleSheet.create({
         color: 'blue',
         marginBottom: '5%'
     },
+    errorContainer: {
+        backgroundColor: 'rgb(245, 216, 218)',
+        width: '90%',
+        borderRadius: 5,
+        marginBottom: '2%'
+    },
     message: {
         textAlign: 'center',
-        fontSize: 16,
-        color: (props => props.type == 'SUCCESS' ? 'green' : 'red'),
+        fontSize: 13,
+        paddingVertical: '2%',
+        color: 'rgb(105, 35, 38)'
     }
 });
 
