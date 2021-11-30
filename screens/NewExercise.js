@@ -66,7 +66,7 @@ const NewExercise = ({ navigation }) => {
                         console.log(values);
                         resetForm();
                     }}
-                    validationSchema={exerciseSchema}
+                // validationSchema={exerciseSchema}
                 >
                     {({ values, handleChange, handleBlur, handleSubmit, handleReset, isSubmitting, setFieldValue, errors, touched }) => (
                         <View>
@@ -109,14 +109,14 @@ const NewExercise = ({ navigation }) => {
                                     <Text style={styles.logBtnText}>LOG</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.errorContainer}>
+                            {/* <View style={styles.errorContainer}>
                                 <Text style={styles.message}>{JSON.stringify(errors, null, 2)}</Text>
                             </View>
                             {!Array.isArray(errors.exercises) && touched.exercises &&
                                 <View style={styles.errorContainer}>
                                     <Text style={styles.message}>{errors.exercises}</Text>
                                 </View>
-                            }
+                            } */}
                         </View>
                     )}
                 </Formik>
