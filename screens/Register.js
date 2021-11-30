@@ -10,7 +10,7 @@ import app from '../config/firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as yup from 'yup'
+import * as yup from 'yup';
 import axios from 'axios';
 
 // const axios = require('axios').default;
@@ -32,9 +32,10 @@ const Register = () => {
     }, []);
 
     const handleRegister = (credentials, setSubmitting) => {
-        const localurl = 'http://localhost:3000/';
-        const testurl = 'http://192.168.1.105:3000/';
-        const remoteurl = 'https://letics.herokuapp.com/';
+        const localURL = Constants.manifest.extra.localURL;
+        const testURL = Constants.manifest.extra.testURL;
+        const remoteURL = Constants.manifest.extra.remoteURL;
+        console.log(remoteURL);
 
         handleMessage(null);
 
@@ -51,8 +52,9 @@ const Register = () => {
                 console.log("Submitted to server:");
                 console.log(userObject);
 
+
                 // Ensure that this points to the correct url when in testing or production
-                axios.post(localurl + 'record/add', userObject)
+                axios.post(remoteURL + 'users/init', userObject)
                     .then((response) => {
                         const result = response.data;
                         const { status, message, data, mongdb } = result;
@@ -63,11 +65,12 @@ const Register = () => {
                         if (status !== 'SUCCESS') {
                             handleMessage(message, status);
                         } else {
-                            // TODO: Navigate to dashboard
+                            // TODO: Navigate to tabs
                         }
                         setSubmitting(false);
                     })
                     .catch((error) => {
+                        console.log("Failed submitting UID to server. Verify the POST requests and paths to the server.");
                         console.log(error);
                         setSubmitting(false);
                         handleMessage("An error occured. Check your network and try again.");
