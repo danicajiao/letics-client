@@ -15,6 +15,8 @@ import {
     ContributionGraph,
     StackedBarChart
 } from 'react-native-chart-kit'
+import axios from 'axios'; // for http request processing
+import { getAuth } from "firebase/auth";
 
 // beginning of current week
 function beginWeek() {
@@ -34,28 +36,47 @@ state = {
 
 // fetch your own data
 get_chart = () => {
+    const localurl = 'http://localhost:3000/';
+    const testurl = 'http://10.115.194.36:3000/';
+    const remoteurl = 'https://letics.herokuapp.com/';
+    const auth = getAuth(); 
+    userId = auth.currentUser.providerData[0].uid;
+
     // url for fetching data
-    //
-    /**
-    fetch('http://blah...', {
-        method: 'GET',
-        headers: {
-            Accept: '...',
-            'Content-Type': '...',
-        },
+    // Ensure that this points to the correct url when in testing or production
+    axios.get(testurl + 'record/add', userObject)
+    .then((response) => {
+        const result = response.data;
+        const { status, message, data, mongdb } = result;
+
+        console.log("Recieved from server:");
+        console.log(mongdb);
+
+        if (status !== 'SUCCESS') {
+            handleMessage(message, status);
+        } else {
+            // TODO: Navigate to dashboard
+        }
+        setSubmitting(false);
     })
-    .then(response => response.json())
-    .then(response => {
-        this.setState({datasource:response})
-    })
-    .catch(error => {});**/
+    .catch((error) => {
+        console.log(error);
+        setSubmitting(false);
+        handleMessage("An error occured. Check your network and try again.");
+    });
+
+    return mongdb;
 }
 
 //Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
-    if (this.state.datasource) {
-    if (this.state.datasource.length) {
-
+    // test retrieval
+    //get_chart();
+    //const auth = getAuth(); 
+    //console.log(auth.currentUser.providerData[0].uid);
+    
+    //if (this.state.datasource) {
+    //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
@@ -63,23 +84,23 @@ const Dashboard = () => {
             <SubHeader title={'DAILY WORKOUT HISTORY'} />
             <SubHeader title={beginWeek()} />
             <LineChart
-                //data={line}
-                data={{
+                data={line}
+                //data={{
                     // x-axis data
-                    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                    datasets: [{
-                        data: this.state.datasource.map(item=>{
-                            return (
-                                // y-axis data
-                                item.rpms // rpms means rep maxes
-                            )
-                        })
-                    }]
-                }}
-                width={220} // from react-native
+                 //   labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                 //   datasets: [{
+                 //       data: this.state.datasource.map(item=>{
+                 //           return (
+                 //               // y-axis data
+                 //               item.rpms // rpms means rep maxes
+                 //           )
+                 //       })
+                 //   }]
+                //}}
+                width={370} // from react-native
                 height={220}
-                //yAxisLabel={''}
-                yAxisLabel="lbs"
+                yAxisLabel={''}
+                //yAxisLabel="lbs"
                 chartConfig={{
                     backgroundColor: '#e26a00',
                     backgroundGradientFrom: '#fb8c00',
@@ -110,7 +131,7 @@ const Dashboard = () => {
             </View>
         </SafeAreaView >
     );
-}; }}
+}; //}}
 
 // prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
