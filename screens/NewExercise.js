@@ -49,7 +49,7 @@ const NewExercise = ({ navigation }) => {
                             .min(1, "Minimum reps is 1")
                             .required("Enter number of reps")
                     })
-                ).min(1, "Needs at least 1 set")
+                ).min(1, "needs at least 1 set.")
             })
         ).min(1, "Needs at least 1 exercise")
     });
@@ -109,14 +109,10 @@ const NewExercise = ({ navigation }) => {
                                     <Text style={styles.logBtnText}>LOG</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.errorContainer}>
+                            {/* ERROR LIST DEBUGGING */}
+                            {/* <View style={styles.errorContainer}>
                                 <Text style={styles.message}>{JSON.stringify(errors, null, 2)}</Text>
-                            </View>
-                            {!Array.isArray(errors.exercises) && touched.exercises &&
-                                <View style={styles.errorContainer}>
-                                    <Text style={styles.message}>{errors.exercises}</Text>
-                                </View>
-                            }
+                            </View> */}
                         </View>
                     )}
                 </Formik>
@@ -126,24 +122,23 @@ const NewExercise = ({ navigation }) => {
 }
 
 const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors, touched }) => {
-    // const errorsList = errors.exercises.length > 0 ? errors.exercises.map((error) => {
-    //     return (
-    //         <View>
-    //             <View style={styles.errorContainer}>
-    //                 <Text style={styles.message}>{error}</Text>
-    //             </View>
-    //         </View>
-    //     );
-    // }) : null;
 
-    const exerciseError = (errors, index, touched) => {
-        if (JSON.stringify(errors) !== '{}') {
-            if (!Array.isArray(errors.exercises[index].sets)) {
-                return (
-                    <View style={styles.errorContainer}>
-                        <Text style={styles.message}>{errors.exercises[index].sets}</Text>
-                    </View>
-                );
+    const FormError = ({ index, errors, touched }) => {
+        if (JSON.stringify(errors) !== '{}' && JSON.stringify(touched) !== '{}') {
+            if (errors.exercises[index] && touched.exercises[index]) {
+                if (Array.isArray(errors.exercises[index].sets)) {
+                    return (
+                        < View style={styles.errorContainer}>
+                            <Text style={styles.message}>Invalid values</Text>
+                        </View>
+                    );
+                } else {
+                    return (
+                        < View style={styles.errorContainer}>
+                            <Text style={styles.message}>'{values.exercises[index].name}' {errors.exercises[index].sets}</Text>
+                        </View>
+                    );
+                }
             } else {
                 return null;
             }
@@ -164,16 +159,15 @@ const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors,
                     handleBlur={handleBlur}
                 />
 
-                {console.log(JSON.stringify(errors))}
+                {/* DEBUG LOGS FOR FORM VALIDATION */}
+                {/* {console.log("ERRORS-----------------------")}
+                {console.log(JSON.stringify(errors, null, 2))}
+                {console.log("TOUCHED-----------------------")}
+                {console.log(JSON.stringify(touched, null, 2))}
+                {console.log("VALUES-----------------------")}
+                {console.log(JSON.stringify(values, null, 2))} */}
 
-                {/* {exerciseError(errors, index, touched)} */}
-
-
-                {/* {Array.isArray(errors.exercises[index].sets) && touched.exercises[index].sets &&
-                    <View style={styles.errorContainer}>
-                        <Text style={styles.message}>This exercise has missing values</Text>
-                    </View>
-                } */}
+                <FormError index={index} errors={errors} touched={touched} />
 
             </View >
 
@@ -304,7 +298,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     message: {
-        // textAlign: 'center',
+        textAlign: 'center',
         fontSize: 13,
         paddingVertical: '2%',
         color: 'rgb(105, 35, 38)'

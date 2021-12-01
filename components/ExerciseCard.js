@@ -1,12 +1,11 @@
-import { validateYupSchema } from 'formik';
 import React, { useState } from 'react'
-import { StyleSheet, SafeAreaView, View, Text, TextInput, Touchable } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ExerciseCard = ({ values, exerciseIndex, setArray, setFieldValue, handleChange, handleBlur }) => {
+const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, handleBlur }) => {
     const pushNewSet = () => ({
-        weight: '',
-        reps: ''
+        weight: undefined,
+        reps: undefined
     });
 
     return (
@@ -27,6 +26,7 @@ const ExerciseCard = ({ values, exerciseIndex, setArray, setFieldValue, handleCh
                             exerciseIndex={exerciseIndex}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
+                            setFieldValue={setFieldValue}
                         />
                     </View>
 
@@ -45,7 +45,7 @@ const ExerciseCard = ({ values, exerciseIndex, setArray, setFieldValue, handleCh
     );
 }
 
-const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur }) => {
+const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur, setFieldValue }) => {
     const list = () => {
         return values.exercises[exerciseIndex].sets.map((set, index) => {
             return (
@@ -56,6 +56,7 @@ const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur }) => {
                         setIndex={index}
                         handleChange={handleChange}
                         handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
                     />
                 </View>
             );
@@ -64,7 +65,7 @@ const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur }) => {
     return <View>{list()}</View>;
 }
 
-const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur }) => {
+const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFieldValue }) => {
     return (
         // <View style={{flex: 1,}}>
         <View style={styles.rowStyle} >
@@ -77,9 +78,9 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur }) => {
                     style={styles.formArea}
                     keyboardType={'number-pad'}
                     placeholder={'10'}
-                    onChangeText={handleChange(`exercises[${exerciseIndex}].sets[${setIndex}].weight`)}
+                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].weight`, parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].weight`)}
-                    value={values.exercises[exerciseIndex].sets[setIndex].weight}
+                    value={values.exercises[exerciseIndex].sets[setIndex].weight === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].weight.toString()}
                 // onChangeText={handleChange}
                 />
             </View>
@@ -88,9 +89,9 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur }) => {
                     style={styles.formArea}
                     keyboardType={'number-pad'}
                     placeholder={'5'}
-                    onChangeText={handleChange(`exercises[${exerciseIndex}].sets[${setIndex}].reps`)}
+                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].reps`, parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].reps`)}
-                    value={values.exercises[exerciseIndex].sets[setIndex].reps}
+                    value={values.exercises[exerciseIndex].sets[setIndex].reps === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].reps.toString()}
                 />
             </View>
         </View >
