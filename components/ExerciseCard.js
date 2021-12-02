@@ -78,9 +78,9 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
                     style={styles.formArea}
                     keyboardType={'number-pad'}
                     placeholder={'10'}
-                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].weight`, parseInt(e))}
+                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].weight`, isNaN(parseInt(e)) ? undefined : parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].weight`)}
-                    value={values.exercises[exerciseIndex].sets[setIndex].weight === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].weight.toString()}
+                    value={values.exercises[exerciseIndex].sets[setIndex].weight === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].weight?.toString()}
                 // onChangeText={handleChange}
                 />
             </View>
@@ -89,7 +89,7 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
                     style={styles.formArea}
                     keyboardType={'number-pad'}
                     placeholder={'5'}
-                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].reps`, parseInt(e))}
+                    onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].reps`, isNaN(parseInt(e)) ? undefined : parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].reps`)}
                     value={values.exercises[exerciseIndex].sets[setIndex].reps === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].reps.toString()}
                 />
