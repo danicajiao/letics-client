@@ -40,11 +40,11 @@ get_chart = () => {
     const testurl = 'http://10.115.194.36:3000/';
     const remoteurl = 'https://letics.herokuapp.com/';
     const auth = getAuth(); 
-    userId = auth.currentUser.providerData[0].uid;
+    userId = auth.currentUser.uid;
 
     // url for fetching data
     // Ensure that this points to the correct url when in testing or production
-    axios.get(testurl + 'record/add', userObject)
+    axios.get(testurl + 'users/getWorkout?ID=userId')
     .then((response) => {
         const result = response.data;
         const { status, message, data, mongdb } = result;
@@ -72,8 +72,9 @@ get_chart = () => {
 const Dashboard = () => {
     // test retrieval
     //get_chart();
-    //const auth = getAuth(); 
-    //console.log(auth.currentUser.providerData[0].uid);
+    const auth = getAuth(); 
+    console.log(auth.currentUser.uid);
+    console.log(auth);
     
     //if (this.state.datasource) {
     //if (this.state.datasource.length) {
