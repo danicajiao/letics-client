@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
@@ -32,35 +32,49 @@ function workoutParser() {
     // stuff
 }
 
+// console.log("DASHBOARD LOG OUTSIDE");
+
 const Dashboard = () => {
+    const [chartParentWidth, setChartParentWidth] = useState(0);
+    // console.log("DASHBOARD LOG INSIDE");
+
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
             <SubHeader title={'DAILY WORKOUT HISTORY'} />
             <SubHeader title={beginWeek()} />
-            <LineChart
-                data={line}
-                width={380} // from react-native
-                height={220}
-                yAxisLabel={''}
-                chartConfig={{
-                    backgroundColor: '#e26a00',
-                    backgroundGradientFrom: '#fb8c00',
-                    backgroundGradientTo: '#ffa726',
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: {
+
+            <View
+                onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}
+                style={styles.chartWrapper}
+            >
+                <LineChart
+                    data={line}
+                    width={chartParentWidth} // from react-native
+                    height={220}
+                    yAxisLabel={''}
+                    chartConfig={{
+                        backgroundColor: '#e26a00',
+                        backgroundGradientFrom: '#fb8c00',
+                        backgroundGradientTo: '#ffa726',
+                        decimalPlaces: 2, // optional, defaults to 2dp
+                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        style: {
+                            borderRadius: 16
+                        }
+                    }}
+                    bezier
+                    style={{
+                        marginVertical: 50,
+                        marginHorizontal: 15,
                         borderRadius: 16
-                    }
-                }}
-                bezier
-                style={{
-                    marginVertical: 50,
-                    marginHorizontal: 15,
-                    borderRadius: 16
-                }}
-            />
+                    }}
+                />
+            </View>
+
+
             <View style={{ flex: 0.1 }}>
                 <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
                     <Text style={styles.logBtnText}>Benchpress</Text>
@@ -83,7 +97,7 @@ const line = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
     datasets: [
         {
-            data: [175, 165, 180, 180, 185, 170],
+            data: [175, 165, 180, 180, 185, 0, 170],
             strokeWidth: 2, // optional
         },
     ],
@@ -94,7 +108,10 @@ const StatusBarHeight = Constants.statusBarHeight;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginVertical: -14
+        // marginVertical: -14
+    },
+    chartWrapper: {
+        width: '90%'
     },
     backIcon: {
         paddingLeft: 20,
