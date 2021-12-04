@@ -41,27 +41,9 @@ const Login = () => {
 
         handleMessage(null);
 
-        // // Ensure that this points to the correct url when in testing or production
-        // axios.post(testurl + 'record/login', credentials)
-        //     .then((response) => {
-        //         const result = response.data;
-        //         const { status, message, data, mongdb } = result;
+        console.log('Submitting to server:');
+        console.log(values);
 
-        //         console.log("Recieved from server:");
-        //         console.log(result);
-
-        //         if (status !== 'SUCCESS') {
-        //             handleMessage(message, status);
-        //         } else {
-        //             // TODO: Navigate to dashboard
-        //         }
-        //         setSubmitting(false);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         setSubmitting(false);
-        //         handleMessage("An error occured. Check your network and try again.");
-        //     });
         signInWithEmailAndPassword(auth, credentials.email, credentials.password)
             .then((userCredential) => {
                 // Signed in 
@@ -79,7 +61,6 @@ const Login = () => {
                 handleMessage(errorMessage);
             });
     }
-
 
     // If type is null, we assume the request failed
     const handleMessage = (message, type = 'FAILED') => {
@@ -106,17 +87,8 @@ const Login = () => {
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        console.log('Submitted to server:');
-                        console.log(values);
                         handleLogin(values, setSubmitting);
-
-                        // // Input checks
-                        // if (values.email == '' || values.password == '') {
-                        //     handleMessage("Please fill in the fields");
-                        //     setSubmitting(false);
-                        // } else {
-                        //     handleLogin(values, setSubmitting);
-                        // }
+                        resetForm();
                     }}
                     validationSchema={loginSchema}
                 >
