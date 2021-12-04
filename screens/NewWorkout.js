@@ -10,7 +10,7 @@ import * as yup from 'yup'
 import Constants from 'expo-constants';
 import axios from 'axios';
 
-const NewExercise = ({ navigation }) => {
+const NewWorkout = ({ navigation }) => {
     const auth = getAuth();
     const [count, setCount] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
@@ -364,4 +364,4 @@ const styles = StyleSheet.create({
     },
 
 })
-export default NewExercise;
+export default NewWorkout;

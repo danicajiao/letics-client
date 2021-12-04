@@ -11,7 +11,7 @@ import Dashboard from './Dashboard';
 import History from './History';
 import WorkoutsList from './WorkoutsList';
 import Profile from './Profile';
-import NewExercise from './NewExercise';
+import NewWorkout from './NewWorkout';
 
 const Placeholder = () => <View />
 
@@ -34,8 +34,8 @@ const RootStackScreen = () => {
                 component={Home}
             />
             <RootStack.Screen
-                name="NewExercise"
-                component={NewExercise}
+                name="NewWorkout"
+                component={NewWorkout}
                 options={{ animationEnabled: true }}
             />
         </RootStack.Navigator>
@@ -76,7 +76,7 @@ const Home = () => {
                 listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
-                        navigation.navigate("NewExercise");
+                        navigation.navigate("NewWorkout");
                     }
                 })}
             />
