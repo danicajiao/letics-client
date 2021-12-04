@@ -6,7 +6,6 @@ import Constants from 'expo-constants';
 import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
-import { CustomButton } from './../components/CustomButton';
 import { SubHeader } from '../components/SubHeader';
 import {
     LineChart,
@@ -16,6 +15,8 @@ import {
     ContributionGraph,
     StackedBarChart
 } from 'react-native-chart-kit'
+import axios from 'axios'; // for http request processing
+import { getAuth } from "firebase/auth";
 
 // beginning of current week
 function beginWeek() {
@@ -27,18 +28,58 @@ function beginWeek() {
     return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-// json parser
-function workoutParser() {
-    // stuff
+// state which has an array to store values
+state = {
+    // holds data for plotting
+    datasource: []
+};
+
+// fetch your own data
+get_chart = () => {
+    const localurl = 'http://localhost:3000/';
+    const testurl = 'http://10.115.194.36:3000/';
+    const remoteurl = 'https://letics.herokuapp.com/';
+    const auth = getAuth();
+    userId = auth.currentUser.uid;
+
+    // url for fetching data
+    // Ensure that this points to the correct url when in testing or production
+    axios.get(testurl + 'users/getWorkout?ID=userId')
+        .then((response) => {
+            const result = response.data;
+            const { status, message, data, mongdb } = result;
+
+            console.log("Recieved from server:");
+            console.log(mongdb);
+
+            if (status !== 'SUCCESS') {
+                handleMessage(message, status);
+            } else {
+                // TODO: Navigate to dashboard
+            }
+            setSubmitting(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setSubmitting(false);
+            handleMessage("An error occured. Check your network and try again.");
+        });
+
+    return mongdb;
 }
 
-// console.log("DASHBOARD LOG OUTSIDE");
-
+//Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
     const [chartParentWidth, setChartParentWidth] = useState(0);
-    // console.log("DASHBOARD LOG INSIDE");
 
+    // test retrieval
+    //get_chart();
+    const auth = getAuth();
+    console.log(auth.currentUser.uid);
+    console.log(auth);
 
+    //if (this.state.datasource) {
+    //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
@@ -52,9 +93,22 @@ const Dashboard = () => {
             >
                 <LineChart
                     data={line}
+                    //data={{
+                    // x-axis data
+                    //   labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                    //   datasets: [{
+                    //       data: this.state.datasource.map(item=>{
+                    //           return (
+                    //               // y-axis data
+                    //               item.rpms // rpms means rep maxes
+                    //           )
+                    //       })
+                    //   }]
+                    //}}
                     width={chartParentWidth} // from react-native
                     height={220}
                     yAxisLabel={''}
+                    //yAxisLabel="lbs"
                     chartConfig={{
                         backgroundColor: '#e26a00',
                         backgroundGradientFrom: '#fb8c00',
@@ -64,12 +118,6 @@ const Dashboard = () => {
                         style: {
                             borderRadius: 16
                         }
-                    }}
-                    bezier
-                    style={{
-                        marginVertical: 50,
-                        marginHorizontal: 15,
-                        borderRadius: 16
                     }}
                 />
             </View>
@@ -88,9 +136,9 @@ const Dashboard = () => {
             </View>
         </SafeAreaView >
     );
-};
+}; //}}
 
-// prototype plot for daily fluctuations in weight
+// prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
 // need to make it work with database
 const line = {
