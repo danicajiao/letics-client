@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TextInput, Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, handleBlur }) => {
+const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, handleBlur, showAddSet = true }) => {
+
     const pushNewSet = () => ({
         weight: undefined,
         reps: undefined
@@ -10,29 +11,25 @@ const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, hand
 
     return (
         <View style={styles.container}>
-            <View style={styles.card}>
-                <Text style={styles.exerciseName}>{values.exercises[exerciseIndex].name}</Text>
-                <View style={styles.tableComponent}>
-                    <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
-                        <Text style={styles.tableHead}>SET</Text>
-                        <Text style={styles.tableHead}>WEIGHT</Text>
-                        <Text style={styles.tableHead}>REPS</Text>
+            <Text style={styles.exerciseName}>{values.exercises[exerciseIndex].name}</Text>
+            <View style={styles.tableComponent}>
+                <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
+                    <Text style={styles.tableHead}>SET</Text>
+                    <Text style={styles.tableHead}>WEIGHT</Text>
+                    <Text style={styles.tableHead}>REPS</Text>
 
-                        <View style={{ top: 17, position: 'absolute', width: '80%', height: 2, backgroundColor: '#C4C4C4' }} />
-                    </View>
-                    <View style={{ height: 80, }}>
-                        <DisplaySets
-                            values={values}
-                            exerciseIndex={exerciseIndex}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            setFieldValue={setFieldValue}
-                        />
-                    </View>
-
-
-
+                    <View style={{ top: 17, position: 'absolute', width: '80%', height: 2, backgroundColor: '#C4C4C4' }} />
                 </View>
+                <DisplaySets
+                    values={values}
+                    exerciseIndex={exerciseIndex}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    setFieldValue={setFieldValue}
+                />
+            </View>
+
+            {showAddSet &&
                 <TouchableOpacity style={styles.addSet} onPress={() => {
                     // console.log(values.exercises[exerciseIndex].sets)
                     setFieldValue(`exercises[${exerciseIndex}].sets`, [...values.exercises[exerciseIndex].sets, pushNewSet()]);
@@ -40,8 +37,9 @@ const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, hand
                 }}>
                     <Text style={styles.addSetText}>ADD SET</Text>
                 </TouchableOpacity>
-            </View>
-        </View >
+            }
+
+        </View>
     );
 }
 
@@ -70,7 +68,7 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
         // <View style={{flex: 1,}}>
         <View style={styles.rowStyle} >
             <View style={{ flex: 0.1 }}>
-                <Text>{setIndex + 1}</Text>
+                <Text style={{ fontWeight: 'bold', fontStyle: 'italic' }}>{setIndex + 1}</Text>
             </View>
             <View style={styles.colStyle}>
                 {/* <Text>Input Weight</Text> */}
@@ -106,16 +104,21 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    card: {
         backgroundColor: "#F3F3F3",
-        width: "100%",
+        // width: "100%",
         borderRadius: 7,
-        marginVertical: '5%'
+        marginVertical: '5%',
+        paddingVertical: '5%',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
     exerciseName: {
         paddingLeft: '5%',
-        paddingVertical: '5%',
         paddingBottom: '2.5%',
         fontWeight: 'bold',
         fontSize: 15,
@@ -125,11 +128,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     tableComponent: {
-        height: 100,
+        // height: 100,
         // backgroundColor: 'green',
     },
     row: {
-        height: 10
+        // height: 10
     },
     formArea: {
         width: '70%',
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         width: '75%',
         backgroundColor: '#C4C4C4',
-        marginBottom: '3%',
+        marginTop: '3%',
         marginRight: '7.5%',
         borderRadius: 17,
     },
