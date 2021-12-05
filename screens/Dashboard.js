@@ -45,7 +45,6 @@ get_chart = () => {
     // url for fetching data
     // Ensure that this points to the correct url when in testing or production
     axios.get(testurl + 'users/getWorkout?ID=userId')
-<<<<<<< HEAD
     .then((response) => {
         const result = response.data;
         const { status, message, data, mongdb } = result;
@@ -65,29 +64,6 @@ get_chart = () => {
         setSubmitting(false);
         handleMessage("An error occured. Check your network and try again.");
     });
-=======
-        .then((response) => {
-            const result = response.data;
-            const { status, message, data, mongdb } = result;
-
-            console.log("Recieved from server:");
-            console.log(mongdb);
-
-            if (status !== 'SUCCESS') {
-                handleMessage(message, status);
-            } else {
-                // TODO: Navigate to dashboard
-            }
-            setSubmitting(false);
-        })
-        .catch((error) => {
-            console.log(error);
-            setSubmitting(false);
-            handleMessage("An error occured. Check your network and try again.");
-        });
-
-    return mongdb;
->>>>>>> 86f33b809d98b8dbec47f7f774dbaaf867334981
 }
 
 //Dashboard will be dynamic due to the linechart 
@@ -99,12 +75,8 @@ const Dashboard = () => {
     const auth = getAuth();
     console.log(auth.currentUser.uid);
     console.log(auth);
-<<<<<<< HEAD
     
     // make sure to have these checks when there's no data
-=======
-
->>>>>>> 86f33b809d98b8dbec47f7f774dbaaf867334981
     //if (this.state.datasource) {
     //if (this.state.datasource.length) {
     return (
@@ -112,7 +84,6 @@ const Dashboard = () => {
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
             <SubHeader title={beginWeek()} />
-<<<<<<< HEAD
             <BarChart
                 data={line}
                 width={370} // from react-native
@@ -136,56 +107,6 @@ const Dashboard = () => {
                 }}
             />
             
-=======
-
-            <View
-                onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}
-                style={styles.chartWrapper}
-            >
-                <LineChart
-                    data={line}
-                    //data={{
-                    // x-axis data
-                    //   labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                    //   datasets: [{
-                    //       data: this.state.datasource.map(item=>{
-                    //           return (
-                    //               // y-axis data
-                    //               item.rpms // rpms means rep maxes
-                    //           )
-                    //       })
-                    //   }]
-                    //}}
-                    width={chartParentWidth} // from react-native
-                    height={220}
-                    yAxisLabel={''}
-                    //yAxisLabel="lbs"
-                    chartConfig={{
-                        backgroundColor: '#e26a00',
-                        backgroundGradientFrom: '#fb8c00',
-                        backgroundGradientTo: '#ffa726',
-                        decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                            borderRadius: 16
-                        }
-                    }}
-                />
-            </View>
-
-
-            <View style={{ flex: 0.1 }}>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
-                    <Text style={styles.logBtnText}>Benchpress</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Squat chart')}>
-                    <Text style={styles.logBtnText}>Squat</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Deadlift chart')}>
-                    <Text style={styles.logBtnText}>Deadlift</Text>
-                </TouchableOpacity>
-            </View>
->>>>>>> 86f33b809d98b8dbec47f7f774dbaaf867334981
         </SafeAreaView >
     );
 };
@@ -197,11 +118,7 @@ const line = {
     labels: ['Squat', 'Benchpress', 'Deadlift'],
     datasets: [
         {
-<<<<<<< HEAD
             data: [175, 165, 180],
-=======
-            data: [175, 165, 180, 180, 185, 0, 170],
->>>>>>> 86f33b809d98b8dbec47f7f774dbaaf867334981
             strokeWidth: 2, // optional
         },
     ],
@@ -212,14 +129,7 @@ const StatusBarHeight = Constants.statusBarHeight;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-<<<<<<< HEAD
         marginVertical: -1//-14
-=======
-        // marginVertical: -14
-    },
-    chartWrapper: {
-        width: '90%'
->>>>>>> 86f33b809d98b8dbec47f7f774dbaaf867334981
     },
     backIcon: {
         paddingLeft: 20,
