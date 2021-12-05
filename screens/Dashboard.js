@@ -28,44 +28,46 @@ function beginWeek() {
     return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-// state which has an array to store values
-state = {
-    // holds data for plotting
-    datasource: []
-};
+// get authentication info
+const auth = getAuth();
 
-// fetch your own data
-get_chart = () => {
-    const localurl = 'http://localhost:3000/';
-    const testurl = 'http://10.115.194.36:3000/';
-    const remoteurl = 'https://letics.herokuapp.com/';
-    const auth = getAuth();
-    userId = auth.currentUser.uid;
+const handleGetWorkouts = () => {
+    const baseUrl = Constants.manifest.extra.testUrl;
+    const uid = auth.currentUser.uid;
 
-    // url for fetching data
-    // Ensure that this points to the correct url when in testing or production
-    axios.get(testurl + 'users/getWorkout?ID=userId')
+    axios.get(baseUrl + 'users/' + uid + '/workouts')
         .then((response) => {
-            const result = response.data;
-            const { status, message, data, mongdb } = result;
+            const itemsTemp = {}
 
-            console.log("Recieved from server:");
-            console.log(mongdb);
+            // the workout data
+            workoutsArray = response.data;
+            console.log(workoutsArray);
+            console.log("hello");
 
-            if (status !== 'SUCCESS') {
-                handleMessage(message, status);
-            } else {
-                // TODO: Navigate to dashboard
+            for (let i = 0; i < workoutsArray.length; i++) {
+                // console.log(workoutsArray[i]);
+                if (!itemsTemp[workoutsArray[i].date]) {
+                    itemsTemp[workoutsArray[i].date] = [];
+                    itemsTemp[workoutsArray[i].date].push({
+                        workout_id: workoutsArray[i]._id,
+                        num_exercises: workoutsArray[i].exercises.length,
+                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
+                        // height: Math.max(50, Math.floor(Math.random() * 150))
+                    });
+                } else {
+                    itemsTemp[workoutsArray[i].date].push({
+                        workout_id: workoutsArray[i]._id,
+                        num_exercises: workoutsArray[i].exercises.length,
+                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
+                        // height: Math.max(50, Math.floor(Math.random() * 150))
+                    });
+                }
             }
-            setSubmitting(false);
         })
         .catch((error) => {
+            console.log("Failed to get from server. Verify the request and path to the server.");
             console.log(error);
-            setSubmitting(false);
-            handleMessage("An error occured. Check your network and try again.");
         });
-
-    return mongdb;
 }
 
 //Dashboard will be dynamic due to the linechart 
@@ -78,38 +80,26 @@ const Dashboard = () => {
     // console.log(auth.currentUser.uid);
     // console.log(auth);
 
+    handleGetWorkouts();
+
+    // make sure to have these checks when there's no data
     //if (this.state.datasource) {
     //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
-            <SubHeader title={'DAILY WORKOUT HISTORY'} />
             <SubHeader title={beginWeek()} />
 
             <View
                 onLayout={({ nativeEvent }) => setChartParentWidth(nativeEvent.layout.width)}
                 style={styles.chartWrapper}
             >
-                <LineChart
+                <BarChart
                     data={line}
-                    //data={{
-                    // x-axis data
-                    //   labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                    //   datasets: [{
-                    //       data: this.state.datasource.map(item=>{
-                    //           return (
-                    //               // y-axis data
-                    //               item.rpms // rpms means rep maxes
-                    //           )
-                    //       })
-                    //   }]
-                    //}}
                     width={chartParentWidth} // from react-native
-                    height={220}
-                    bezier
+                    height={450}
                     yAxisLabel={''}
-                    //yAxisLabel="lbs"
                     chartConfig={{
                         backgroundColor: '#e26a00',
                         backgroundGradientFrom: '#fb8c00',
@@ -120,34 +110,26 @@ const Dashboard = () => {
                             borderRadius: 16
                         }
                     }}
-                    style={{ borderRadius: 16 }}
+                    bezier
+                    style={{
+                        marginVertical: 60,//50,
+                        // marginHorizontal: 15,
+                        borderRadius: 16
+                    }}
                 />
-            </View>
-
-
-            <View style={{ flex: 0.1 }}>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
-                    <Text style={styles.logBtnText}>Benchpress</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Squat chart')}>
-                    <Text style={styles.logBtnText}>Squat</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Deadlift chart')}>
-                    <Text style={styles.logBtnText}>Deadlift</Text>
-                </TouchableOpacity>
             </View>
         </SafeAreaView >
     );
-}; //}}
+};
 
 // prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
 // need to make it work with database
 const line = {
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+    labels: ['Squat', 'Benchpress', 'Deadlift'],
     datasets: [
         {
-            data: [175, 165, 180, 180, 185, 0, 170],
+            data: [175, 165, 180],
             strokeWidth: 2, // optional
         },
     ],
@@ -164,6 +146,7 @@ const styles = StyleSheet.create({
         width: '90%',
         alignSelf: 'center',
         marginVertical: '5%'
+        // marginVertical: -1//-14
     },
     backIcon: {
         paddingLeft: 20,
