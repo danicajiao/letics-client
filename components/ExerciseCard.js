@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TextInput, Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, handleBlur, showAddSet = true }) => {
+const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, handleBlur, showAddSet = true, isEditing = true }) => {
 
     const pushNewSet = () => ({
         weight: undefined,
@@ -26,10 +26,11 @@ const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, hand
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     setFieldValue={setFieldValue}
+                    isEditing={isEditing}
                 />
             </View>
 
-            {showAddSet &&
+            {isEditing &&
                 <TouchableOpacity style={styles.addSet} onPress={() => {
                     // console.log(values.exercises[exerciseIndex].sets)
                     setFieldValue(`exercises[${exerciseIndex}].sets`, [...values.exercises[exerciseIndex].sets, pushNewSet()]);
@@ -43,7 +44,7 @@ const ExerciseCard = ({ values, exerciseIndex, setFieldValue, handleChange, hand
     );
 }
 
-const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur, setFieldValue }) => {
+const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur, setFieldValue, isEditing }) => {
     const list = () => {
         return values.exercises[exerciseIndex].sets.map((set, index) => {
             return (
@@ -55,6 +56,7 @@ const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur, setField
                         handleChange={handleChange}
                         handleBlur={handleBlur}
                         setFieldValue={setFieldValue}
+                        isEditing={isEditing}
                     />
                 </View>
             );
@@ -63,7 +65,7 @@ const DisplaySets = ({ values, exerciseIndex, handleChange, handleBlur, setField
     return <View>{list()}</View>;
 }
 
-const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFieldValue }) => {
+const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFieldValue, isEditing }) => {
     return (
         // <View style={{flex: 1,}}>
         <View style={styles.rowStyle} >
@@ -79,7 +81,8 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
                     onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].weight`, isNaN(parseInt(e)) ? undefined : parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].weight`)}
                     value={values.exercises[exerciseIndex].sets[setIndex].weight === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].weight?.toString()}
-                // onChangeText={handleChange}
+                    editable={isEditing}
+                    selectTextOnFocus={isEditing}
                 />
             </View>
             <View style={styles.colStyle}>
@@ -90,6 +93,8 @@ const Row = ({ values, exerciseIndex, setIndex, handleChange, handleBlur, setFie
                     onChangeText={e => setFieldValue(`exercises[${exerciseIndex}].sets[${setIndex}].reps`, isNaN(parseInt(e)) ? undefined : parseInt(e))}
                     onBlur={handleBlur(`exercises[${exerciseIndex}].sets[${setIndex}].reps`)}
                     value={values.exercises[exerciseIndex].sets[setIndex].reps === undefined ? undefined : values.exercises[exerciseIndex].sets[setIndex].reps.toString()}
+                    editable={isEditing}
+                    selectTextOnFocus={isEditing}
                 />
             </View>
         </View >

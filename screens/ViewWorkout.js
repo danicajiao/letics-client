@@ -10,7 +10,8 @@ import * as yup from 'yup'
 import Constants from 'expo-constants';
 import axios from 'axios';
 
-const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWorkout }) => {
+const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWorkout, handleUpdateWorkout }) => {
+    const [isEditing, setEditState] = useState(false);
     const auth = getAuth();
 
     const deleteDialog = () =>
@@ -29,6 +30,24 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
                 }
             ]
         );
+
+    const editDialog = (handleReset) =>
+        Alert.alert(
+            "Confirm Operation",
+            "Are you sure you want to discard your edits?",
+            [
+                { text: "Cancel" },
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        handleReset()
+                        setEditState(false);
+                        // navigation.goBack()
+                    },
+                }
+            ]
+        );
+
 
     const initialValues = {
         date: undefined,
@@ -57,41 +76,7 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
         ).min(1, "Needs at least 1 exercise")
     });
 
-    // const handleLog = (values, setSubmitting) => {
-    //     const workoutObj = {
-    //         firebase_uid: auth.currentUser.uid,
-    //         ...values
-    //     }
 
-    //     console.log("Submitted to server:");
-    //     console.log(workoutObj);
-
-    //     const baseUrl = Constants.manifest.extra.testUrl;
-    //     console.log(baseUrl);
-
-    //     // Ensure that this points to the correct url when in testing or production
-    //     axios.post(baseUrl + 'users/logWorkout', workoutObj)
-    //         .then((response) => {
-    //             const result = response.data;
-
-    //             console.log("Recieved from server:");
-    //             console.log(result);
-
-    //             // if (status !== 'SUCCESS') {
-    //             //     handleMessage(message, status);
-    //             // } else {
-
-    //             // }
-
-    //             setSubmitting(false);
-    //         })
-    //         .catch((error) => {
-    //             console.log("Failed to submit to server. Verify the request and path to the server.");
-    //             console.log(error);
-    //             setSubmitting(false);
-    //             handleMessage("An error occured. Check your network and try again.");
-    //         });
-    // }
 
     return (
         // <SafeAreaView style={styles.container}>
@@ -101,11 +86,11 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
             <Formik
                 initialValues={workoutData}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                    values.date = getCurrentDate();
                     console.log('Gathered from logging:');
                     console.log(values);
-                    handleLog(values, setSubmitting);
-                    resetForm();
+
+                    handleUpdateWorkout(workoutData._id, values.exercises, setSubmitting);
+                    // resetForm();
                 }}
                 validationSchema={exerciseSchema}
             >
@@ -117,14 +102,14 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
                                 <Text style={{ fontSize: 20 }}>Close</Text>
                             </TouchableOpacity>
                             <View style={{ flexDirection: 'row' }}>
-                                {!isSubmitting && (
-                                    <TouchableOpacity style={styles.newBtn} onPress={handleSubmit}>
+                                {!isEditing && (
+                                    <TouchableOpacity style={styles.newBtn} onPress={() => setEditState(true)}>
                                         <Octicons name={'pencil'} size={20} />
                                     </TouchableOpacity>
                                 )}
-                                {isSubmitting && (
-                                    <TouchableOpacity disabled={true} style={styles.newBtn}>
-                                        <ActivityIndicator size='small' color='black' />
+                                {isEditing && (
+                                    <TouchableOpacity style={styles.newBtn} onPress={() => editDialog(handleReset)}>
+                                        <Octicons name={'x'} size={20} />
                                     </TouchableOpacity>
                                 )}
                                 {!isSubmitting && (
@@ -152,14 +137,23 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
                             handleBlur={handleBlur}
                             errors={errors}
                             touched={touched}
+                            isEditing={isEditing}
                         />
 
-                        <View style={{ flex: 0.1 }}>
-                            {/* <TouchableOpacity style={styles.logBtn} onPress={() => { handleSubmit() }}>
-                                    <Text style={styles.logBtnText}>LOG</Text>
-                                </TouchableOpacity> */}
+                        {/* <View style={{ flex: 0.1 }}> */}
 
-                        </View>
+                        {isEditing && !isSubmitting &&
+                            <TouchableOpacity style={styles.updateBtn} onPress={() => { handleSubmit() }}>
+                                <Text style={styles.updateBtnText}>UPDATE</Text>
+                            </TouchableOpacity>
+                        }
+                        {isSubmitting &&
+                            <TouchableOpacity style={styles.updateBtn} onPress={() => { handleSubmit() }}>
+                                <ActivityIndicator size='small' color='white' />
+                            </TouchableOpacity>
+                        }
+
+                        {/* </View> */}
 
                         {/* ERROR LIST DEBUGGING */}
                         {/* <View style={styles.errorContainer}>
@@ -173,7 +167,7 @@ const ViewWorkout = ({ navigation, workoutData, setModalVisible, handleDeleteWor
     );
 }
 
-const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors, touched }) => {
+const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors, touched, isEditing }) => {
 
     const FormError = ({ index, errors, touched }) => {
         if (JSON.stringify(errors) !== '{}' && JSON.stringify(touched) !== '{}') {
@@ -209,6 +203,8 @@ const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors,
                     setFieldValue={setFieldValue}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
+                    showAddSet={false}
+                    isEditing={isEditing}
                 />
 
                 {/* DEBUG LOGS FOR FORM VALIDATION */}
@@ -288,19 +284,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 
     },
-    logBtn: {
+    updateBtn: {
         // marginBottom: 30,
         backgroundColor: '#000',
         borderWidth: 2,
         borderRadius: 6,
-        width: '20%',
+        width: '90%',
+        marginVertical: '5%',
         height: 50,
         alignSelf: 'center',
         justifyContent: 'center',
         // position: 'absolute',
         // bottom: 50,
     },
-    logBtnText: {
+    updateBtnText: {
         color: '#fff',
         textAlign: 'center',
         fontSize: 16,

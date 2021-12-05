@@ -16,7 +16,6 @@ const History = () => {
     const [workoutsArray, setWorkoutsArray] = useState([]);
     const [calendarItems, setCalendarItems] = useState({});
     const [doneLoading, setLoadingState] = useState(false);
-    const [editState, setEditState] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedWorkout, setSelectedWorkout] = useState(null);
     const auth = getAuth();
@@ -132,6 +131,28 @@ const History = () => {
             });
     }
 
+    const handleUpdateWorkout = (workoutId, updatedWorkout, setSubmitting) => {
+        const baseUrl = Constants.manifest.extra.testUrl;
+        const uid = auth.currentUser.uid;
+
+        axios.put(baseUrl + 'users/' + uid + '/workouts/' + workoutId + '/update', updatedWorkout)
+            .then((response) => {
+                // console.log("BEFORE OPERATIONS:")
+                // console.log(items);
+                // const itemCopy = { ...items };
+                console.log(response.data);
+                setSubmitting(false)
+                // setModalVisible(false)
+                handleGetWorkouts();
+
+            })
+            .catch((error) => {
+                console.log("Failed to get from server. Verify the request and path to the server.");
+                console.log(error);
+                setSubmitting(false)
+            });
+    }
+
     const constructCalendarItems = () => {
 
         const itemsTemp = {}
@@ -169,7 +190,6 @@ const History = () => {
 
         // console.log(newItems)
         setCalendarItems(newItems);
-        setLoadingState(true);
     }
 
     const renderItem = (item) => {
@@ -215,6 +235,7 @@ const History = () => {
                             workoutData={workoutsArray[selectedWorkout]}
                             setModalVisible={setModalVisible}
                             handleDeleteWorkout={handleDeleteWorkout}
+                            handleUpdateWorkout={handleUpdateWorkout}
                         />
                         {/* <Text style={styles.modalText}>{workoutsArray[selectedWorkout]._id}</Text>
                         <Pressable
