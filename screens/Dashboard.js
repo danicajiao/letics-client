@@ -75,8 +75,8 @@ const Dashboard = () => {
     // test retrieval
     //get_chart();
     const auth = getAuth();
-    console.log(auth.currentUser.uid);
-    console.log(auth);
+    // console.log(auth.currentUser.uid);
+    // console.log(auth);
 
     //if (this.state.datasource) {
     //if (this.state.datasource.length) {
@@ -107,6 +107,7 @@ const Dashboard = () => {
                     //}}
                     width={chartParentWidth} // from react-native
                     height={220}
+                    bezier
                     yAxisLabel={''}
                     //yAxisLabel="lbs"
                     chartConfig={{
@@ -119,6 +120,7 @@ const Dashboard = () => {
                             borderRadius: 16
                         }
                     }}
+                    style={{ borderRadius: 16 }}
                 />
             </View>
 
@@ -159,7 +161,9 @@ const styles = StyleSheet.create({
         // marginVertical: -14
     },
     chartWrapper: {
-        width: '90%'
+        width: '90%',
+        alignSelf: 'center',
+        marginVertical: '5%'
     },
     backIcon: {
         paddingLeft: 20,
