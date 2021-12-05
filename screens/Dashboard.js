@@ -64,8 +64,6 @@ get_chart = () => {
         setSubmitting(false);
         handleMessage("An error occured. Check your network and try again.");
     });
-
-    return mongdb;
 }
 
 //Dashboard will be dynamic due to the linechart 
@@ -76,32 +74,19 @@ const Dashboard = () => {
     console.log(auth.currentUser.uid);
     console.log(auth);
     
+    // make sure to have these checks when there's no data
     //if (this.state.datasource) {
     //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
-            <SubHeader title={'DAILY WORKOUT HISTORY'} />
             <SubHeader title={beginWeek()} />
-            <LineChart
+            <BarChart
                 data={line}
-                //data={{
-                    // x-axis data
-                 //   labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                 //   datasets: [{
-                 //       data: this.state.datasource.map(item=>{
-                 //           return (
-                 //               // y-axis data
-                 //               item.rpms // rpms means rep maxes
-                 //           )
-                 //       })
-                 //   }]
-                //}}
                 width={370} // from react-native
-                height={220}
+                height={450}
                 yAxisLabel={''}
-                //yAxisLabel="lbs"
                 chartConfig={{
                     backgroundColor: '#e26a00',
                     backgroundGradientFrom: '#fb8c00',
@@ -114,34 +99,24 @@ const Dashboard = () => {
                 }}
                 bezier
                 style={{
-                    marginVertical: 50,
+                    marginVertical: 60,//50,
                     marginHorizontal: 15,
                     borderRadius: 16
                 }}
             />
-            <View style={{ flex: 0.1 }}>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Benchpress chart')}>
-                    <Text style={styles.logBtnText}>Benchpress</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Squat chart')}>
-                    <Text style={styles.logBtnText}>Squat</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.logBtn} onPress={() => Alert.alert('Deadlift chart')}>
-                    <Text style={styles.logBtnText}>Deadlift</Text>
-                </TouchableOpacity>
-            </View>
+            
         </SafeAreaView >
     );
-}; //}}
+};
 
 // prototype plots for daily fluctuations in weight
 // sidenote: this is static data used for organzing how I want things to look
 // need to make it work with database
 const line = {
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+    labels: ['Squat', 'Benchpress', 'Deadlift'],
     datasets: [
         {
-            data: [175, 165, 180, 180, 185, 170],
+            data: [175, 165, 180],
             strokeWidth: 2, // optional
         },
     ],
@@ -152,7 +127,7 @@ const StatusBarHeight = Constants.statusBarHeight;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginVertical: -14
+        marginVertical: -1//-14
     },
     backIcon: {
         paddingLeft: 20,
