@@ -32,9 +32,7 @@ const Register = () => {
     }, []);
 
     const handleRegister = (credentials, setSubmitting) => {
-        const localURL = Constants.manifest.extra.localURL;
-        const testURL = Constants.manifest.extra.testURL;
-        const remoteURL = Constants.manifest.extra.remoteURL;
+        const baseUrl = Constants.manifest.extra.testUrl;
 
         console.log('Submitting to Firebase:');
         console.log(credentials);
@@ -56,7 +54,7 @@ const Register = () => {
 
 
                 // Ensure that this points to the correct url when in testing or production
-                axios.post(remoteURL + 'users/init', userObject)
+                axios.post(baseUrl + 'users/init', userObject)
                     .then((response) => {
                         const result = response.data;
                         const { status, message, data, mongdb } = result;
