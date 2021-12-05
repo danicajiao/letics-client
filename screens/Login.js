@@ -35,14 +35,11 @@ const Login = () => {
 
 
     const handleLogin = (credentials, setSubmitting) => {
-        const localurl = 'http://localhost:3000/';
-        const testurl = 'http://192.168.1.105:3000/';
-        const remoteurl = 'https://letics.herokuapp.com/';
 
         handleMessage(null);
 
         console.log('Submitting to server:');
-        console.log(values);
+        console.log(credentials);
 
         signInWithEmailAndPassword(auth, credentials.email, credentials.password)
             .then((userCredential) => {

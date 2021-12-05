@@ -36,8 +36,8 @@ const Register = () => {
         const testURL = Constants.manifest.extra.testURL;
         const remoteURL = Constants.manifest.extra.remoteURL;
 
-        console.log('Submitted to Firebase:');
-        console.log(values);
+        console.log('Submitting to Firebase:');
+        console.log(credentials);
 
         handleMessage(null);
 
@@ -51,7 +51,7 @@ const Register = () => {
                     firebase_uid: user.uid,
                     workouts: []
                 }
-                console.log("Submitted to server:");
+                console.log("Submitting to server:");
                 console.log(userObject);
 
 
