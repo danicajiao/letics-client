@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Modal, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import WorkoutsList from './WorkoutsList';
 import { Header } from './../components/Header';
 import ExerciseCard from './../components/ExerciseCard'
+import { getAuth } from "firebase/auth";
 import * as yup from 'yup'
+import Constants from 'expo-constants';
+import axios from 'axios';
 
 const NewExercise = ({ navigation }) => {
+    const auth = getAuth();
     const [count, setCount] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -28,7 +32,7 @@ const NewExercise = ({ navigation }) => {
         );
 
     const initialValues = {
-        date: '',
+        date: undefined,
         exercises: []
     }
 
@@ -54,6 +58,42 @@ const NewExercise = ({ navigation }) => {
         ).min(1, "Needs at least 1 exercise")
     });
 
+    const handleLog = (values, setSubmitting) => {
+        const workoutObj = {
+            firebase_uid: auth.currentUser.uid,
+            ...values
+        }
+
+        console.log("Submitted to server:");
+        console.log(workoutObj);
+
+        const baseUrl = Constants.manifest.extra.testUrl;
+        console.log(baseUrl);
+
+        // Ensure that this points to the correct url when in testing or production
+        axios.post(baseUrl + 'users/logWorkout', workoutObj)
+            .then((response) => {
+                const result = response.data;
+
+                console.log("Recieved from server:");
+                console.log(result);
+
+                // if (status !== 'SUCCESS') {
+                //     handleMessage(message, status);
+                // } else {
+
+                // }
+
+                setSubmitting(false);
+            })
+            .catch((error) => {
+                console.log("Failed to submit to server. Verify the request and path to the server.");
+                console.log(error);
+                setSubmitting(false);
+                handleMessage("An error occured. Check your network and try again.");
+            });
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -62,8 +102,10 @@ const NewExercise = ({ navigation }) => {
                 <Formik
                     initialValues={initialValues}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
+                        values.date = getCurrentDate();
                         console.log('Gathered from logging:');
                         console.log(values);
+                        handleLog(values, setSubmitting);
                         resetForm();
                     }}
                     validationSchema={exerciseSchema}
@@ -105,10 +147,21 @@ const NewExercise = ({ navigation }) => {
                                 <TouchableOpacity style={styles.addBtn} onPress={() => setModalOpen(true)}>
                                     <Text style={styles.addBtnText}>Add Exercise</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.logBtn} onPress={() => { handleSubmit() }}>
+                                {/* <TouchableOpacity style={styles.logBtn} onPress={() => { handleSubmit() }}>
                                     <Text style={styles.logBtnText}>LOG</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
+                                {!isSubmitting && (
+                                    <TouchableOpacity style={styles.logBtn} onPress={handleSubmit}>
+                                        <Text style={styles.logBtnText}>LOG</Text>
+                                    </TouchableOpacity>
+                                )}
+                                {isSubmitting && (
+                                    <TouchableOpacity disabled={true} style={styles.logBtn}>
+                                        <ActivityIndicator size='small' color='white' />
+                                    </TouchableOpacity>
+                                )}
                             </View>
+
                             {/* ERROR LIST DEBUGGING */}
                             {/* <View style={styles.errorContainer}>
                                 <Text style={styles.message}>{JSON.stringify(errors, null, 2)}</Text>
@@ -186,11 +239,9 @@ const ExerciseList = ({ values, setFieldValue, handleChange, handleBlur, errors,
     );
 }
 
-function currentDay() {
-    let date = new Date().getDate();
-    let month = new Date().getMonth() + 1;
-    let year = new Date().getFullYear();
-    return month + ' / ' + date + ' / ' + year;
+const getCurrentDate = () => {
+    const currentDate = new Date()
+    return currentDate.toISOString().split('T')[0];
 }
 
 

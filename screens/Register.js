@@ -35,7 +35,9 @@ const Register = () => {
         const localURL = Constants.manifest.extra.localURL;
         const testURL = Constants.manifest.extra.testURL;
         const remoteURL = Constants.manifest.extra.remoteURL;
-        console.log(remoteURL);
+
+        console.log('Submitted to Firebase:');
+        console.log(values);
 
         handleMessage(null);
 
@@ -127,8 +129,6 @@ const Register = () => {
                 <Formik
                     initialValues={{ username: '', email: '', password: '' }}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        console.log('Submitted to Firebase:');
-                        console.log(values);
                         handleRegister(values, setSubmitting);
                     }}
                     validationSchema={registerSchema}
