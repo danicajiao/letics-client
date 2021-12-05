@@ -28,42 +28,46 @@ function beginWeek() {
     return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-// state which has an array to store values
-state = {
-    // holds data for plotting
-    datasource: []
-};
+// get authentication info
+const auth = getAuth();
 
-// fetch your own data
-get_chart = () => {
-    const localurl = 'http://localhost:3000/';
-    const testurl = 'http://10.115.194.36:3000/';
-    const remoteurl = 'https://letics.herokuapp.com/';
-    const auth = getAuth();
-    userId = auth.currentUser.uid;
+const handleGetWorkouts = () => {
+    const baseUrl = Constants.manifest.extra.testUrl;
+    const uid = auth.currentUser.uid;
 
-    // url for fetching data
-    // Ensure that this points to the correct url when in testing or production
-    axios.get(testurl + 'users/getWorkout?ID=userId')
-    .then((response) => {
-        const result = response.data;
-        const { status, message, data, mongdb } = result;
+    axios.get(baseUrl + 'users/' + uid + '/workouts')
+        .then((response) => {
+            const itemsTemp = {}
 
-        console.log("Recieved from server:");
-        console.log(mongdb);
+            // the workout data
+            workoutsArray = response.data;
+            console.log(workoutsArray);
+            console.log("hello");
 
-        if (status !== 'SUCCESS') {
-            handleMessage(message, status);
-        } else {
-            // TODO: Navigate to dashboard
-        }
-        setSubmitting(false);
-    })
-    .catch((error) => {
-        console.log(error);
-        setSubmitting(false);
-        handleMessage("An error occured. Check your network and try again.");
-    });
+            for (let i = 0; i < workoutsArray.length; i++) {
+                // console.log(workoutsArray[i]);
+                if (!itemsTemp[workoutsArray[i].date]) {
+                    itemsTemp[workoutsArray[i].date] = [];
+                    itemsTemp[workoutsArray[i].date].push({
+                        workout_id: workoutsArray[i]._id,
+                        num_exercises: workoutsArray[i].exercises.length,
+                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
+                        // height: Math.max(50, Math.floor(Math.random() * 150))
+                    });
+                } else {
+                    itemsTemp[workoutsArray[i].date].push({
+                        workout_id: workoutsArray[i]._id,
+                        num_exercises: workoutsArray[i].exercises.length,
+                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
+                        // height: Math.max(50, Math.floor(Math.random() * 150))
+                    });
+                }
+            }
+        })
+        .catch((error) => {
+            console.log("Failed to get from server. Verify the request and path to the server.");
+            console.log(error);
+        });
 }
 
 //Dashboard will be dynamic due to the linechart 
@@ -71,10 +75,7 @@ const Dashboard = () => {
     const [chartParentWidth, setChartParentWidth] = useState(0);
 
     // test retrieval
-    //get_chart();
-    const auth = getAuth();
-    console.log(auth.currentUser.uid);
-    console.log(auth);
+    handleGetWorkouts();
     
     // make sure to have these checks when there's no data
     //if (this.state.datasource) {
