@@ -20,22 +20,58 @@ import { Header } from './../components/Header';
 import { AlphabetList } from "react-native-section-alphabet-list";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
+import Constants from 'expo-constants';
+import axios from 'axios';
 
-
-
-const axios = require('axios').default;
 
 const WorkoutsList = ({ values, setFieldValue, pushNewExercise, modalOpen, setModalOpen, navigation }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+    const [exercises, setExercises] = useState([]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+            // console.log("Focused History")
+            const unsubscribe = handleGetExercises({ searchQuery: '' });
+            // console.log(getCurrentDate())
+            return unsubscribe;
+        }, [])
+    );
+
     // const [infoModal, setInfoModalOpen] = useState(false);
     // console.log(modalOpen);
+
+    const handleGetExercises = (values) => {
+        const baseUrl = Constants.manifest.extra.testUrl;
+        // console.log("IN handleGetExercises:")
+        // console.log(values.searchQuery);
+        console.log(baseUrl + 'exercises/' + values.searchQuery);
+        axios.get(baseUrl + 'exercises/' + values.searchQuery)
+            .then((response) => {
+                const exercisesArray = response.data;
+                let myArray = [];
+                console.log(exercisesArray);
+                for (let i = 0; i < exercisesArray.length; i++) {
+                    let obj = {
+                        key: exercisesArray[i]._id,
+                        value: exercisesArray[i].exercise_name,
+                        type: exercisesArray[i].exercise_type
+                    }
+                    myArray.push(obj);
+                }
+                setExercises(myArray);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
 
     // If type is null, we assume the request failed
     const handleMessage = (message, type = 'FAILED') => {
         setMessage(message);
-        setMessageType(type)
+        setMessageType(type);
     }
 
     const CustomItem = ({ item, pushNewExercise, modalOpen, setModalOpen }) => {
@@ -66,20 +102,6 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, modalOpen, setMo
         );
     }
 
-    const data = [
-        { value: 'Bench Press', type: 'Chest', key: 'lCUTs2' },
-        { value: 'Squat', type: 'Legs', key: 'TXdL0c' },
-        { value: 'Crunch', type: 'Core', key: 'zqsiEw' },
-        { value: 'Deadlift', type: 'Legs', key: 'psg2PM' },
-        { value: 'Wide Pull Up', type: 'Back', key: '1K6I18' },
-        { value: 'Arnold Press', type: 'Shoulders', key: 'NVHSkA' },
-        { value: 'Incline Chest Fly', type: 'Chest', key: 'SaHqyG' },
-        { value: 'Lunge', type: 'Legs', key: 'iaT1Ex' },
-        { value: 'Chest Dip', type: 'Chest', key: 'OvMd5e' },
-        { value: 'Decline Bench Press', type: 'Chest', key: '25zqAO' },
-        { value: 'Hanging Knee Raise', type: 'Core', key: '8cWuu3' },
-    ]
-
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']} >
             <StatusBar barStyle={'dark-content'} />
@@ -89,27 +111,23 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, modalOpen, setMo
                 onSubmit={(values, { setSubmitting }) => {
                     console.log('Submitted to server:');
                     console.log(values);
+                    handleGetExercises(values)
 
-                    // Input checks
-                    if (values.username == '' || values.email == '' || values.password == '') {
-                        handleMessage("Please fill in the fields");
-                        setSubmitting(false);
-                    } else {
-                        handleRegister(values, setSubmitting);
-                    }
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                {({ handleChange, handleBlur, handleSubmit, values, isSubmitting, setFieldValue }) => (
                     <View style={styles.forms}>
                         <MyTextInput
                             label='Search'
                             icon='search'
                             placeholder='Bench Press'
                             placeholderTextColor={Colors.darkLight}
-                            onChangeText={handleChange('searchQuery')}
+                            // onChangeText={e => { setFieldValue('searchQuery', e ? e : ); handleSubmit() }}
+                            onChangeText={e => { setFieldValue('searchQuery', e); handleSubmit() }}
                             onBlur={handleBlur('searchQuery')}
                             value={values.searchQuery}
                             keyboardType='default'
+                        // onSubmitEditing={() => { handleSubmit(); }}
                         />
                         <Text type={messageType} style={styles.message}>{message}</Text>
                     </View>
@@ -117,7 +135,7 @@ const WorkoutsList = ({ values, setFieldValue, pushNewExercise, modalOpen, setMo
             </Formik >
             <AlphabetList
                 style={{ flex: 1 }}
-                data={data}
+                data={exercises}
                 indexLetterStyle={{
                     color: 'black',
                     fontSize: 12,
@@ -164,7 +182,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary,
     },
     cardImg: {
-        backgroundColor: 'gray',
+        backgroundColor: 'lightgray',
         borderRadius: 100,
         height: 40,
         width: 40
