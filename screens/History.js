@@ -27,21 +27,15 @@ const History = () => {
         React.useCallback(() => {
             // Do something when the screen is focused
             // console.log("Focused History")
-            handleGetWorkouts();
+            const unsubscribe = handleGetWorkouts();
             // console.log(getCurrentDate())
-            return () => {
-                // Do something when the screen is unfocused
-                // Useful for cleanup functions
-            };
+            return unsubscribe;
         }, [])
     );
 
     useEffect(() => {
-        constructCalendarItems();
-        return () => {
-            // Do something when the component is mounted
-            // Useful for cleanup functions
-        }
+        const unsubscribe = constructCalendarItems();
+        return unsubscribe;
     }, [workoutsArray])
 
     const getCurrentDate = () => {
@@ -232,7 +226,7 @@ const History = () => {
                 items={calendarItems}
                 renderItem={renderItem}
                 // loadItemsForMonth={loadItems}
-                selected={'2021-12-02'}
+                selected={getCurrentDate}
                 // selected={currentDate}
                 showClosingKnob={true}
                 theme={{
