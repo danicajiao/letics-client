@@ -33,11 +33,11 @@ const auth = getAuth();
 
 const handleGetWorkouts = () => {
     const baseUrl = Constants.manifest.extra.testUrl;
-    const uid = auth.currentUser.uid; 
+    const uid = auth.currentUser.uid;
     let max_weight = [0, 0, 0]; // squat, bench, deadlift
     let itemsTemp = [];
     let sets = [];
-    
+
     const info = () => {
         const [workoutsArray, setWorkoutsArray] = useState([]);
 
@@ -68,10 +68,10 @@ const handleGetWorkouts = () => {
         for (let j = 0; j < itemsTemp.length; j++) {
             if (itemsTemp[j].name === "Bench Press") {
                 // check for highest weight acheived by user in bench
-                sets = itemsTemp[j].sets; 
+                sets = itemsTemp[j].sets;
                 for (let k = 0; k < sets.length; k++) {
                     if (max_weight[1] <= sets[k].weight) {
-                        max_weight[1] = sets[k].weight; 
+                        max_weight[1] = sets[k].weight;
                     }
                 }
             }
@@ -80,7 +80,7 @@ const handleGetWorkouts = () => {
                 sets = itemsTemp[j].sets;
                 for (let k = 0; k < sets.length; k++) {
                     if (max_weight[0] <= sets[k].weight) {
-                        max_weight[0] = sets[k].weight; 
+                        max_weight[0] = sets[k].weight;
                     }
                 }
             }
@@ -89,7 +89,7 @@ const handleGetWorkouts = () => {
                 sets = itemsTemp[j].sets;
                 for (let k = 0; k < sets.length; k++) {
                     if (max_weight[2] <= sets[k].weight) {
-                        max_weight[2] = sets[k].weight; 
+                        max_weight[2] = sets[k].weight;
                     }
                 }
             }
@@ -104,13 +104,25 @@ const Dashboard = () => {
     const [chartParentWidth, setChartParentWidth] = useState(0);
     let max_weight = handleGetWorkouts();
     let data = {
-        labels: ['Squat', 'Bench press', 'Deadlift'],
+        labels: ['Squat', 'Bench Press', 'Deadlift'],
         datasets: [
             {
                 data: max_weight, //max_weight,
+                // color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // optional
                 strokeWidth: 2, // optional
             },
         ],
+    };
+
+    const chartConfig = {
+        backgroundGradientFrom: '#fb8c00',
+        backgroundGradientTo: '#ffa726',
+        decimalPlaces: 2, // optional, defaults to 2dp
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        style: {
+            borderRadius: 16
+        }
+
     };
 
     return (
@@ -129,16 +141,7 @@ const Dashboard = () => {
                     width={chartParentWidth} // from react-native
                     height={450}
                     yAxisLabel={''}
-                    chartConfig={{
-                        backgroundColor: '#e26a00',
-                        backgroundGradientFrom: '#fb8c00',
-                        backgroundGradientTo: '#ffa726',
-                        decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                            borderRadius: 16
-                        }
-                    }}
+                    chartConfig={chartConfig}
                     bezier
                     style={{
                         marginVertical: 10,//50,
