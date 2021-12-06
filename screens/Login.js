@@ -20,18 +20,18 @@ const Login = () => {
     const auth = getAuth();
     const navigation = useNavigation();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                if (user.emailVerified) {
-                    navigation.navigate("Home");
-                } else {
-                    navigation.navigate("Verify");
-                }
-            }
-        })
-        return unsubscribe;
-    }, []);
+    // useEffect(() => {
+    //     const unsubscribe = auth.onAuthStateChanged(user => {
+    //         if (user) {
+    //             if (user.emailVerified) {
+    //                 navigation.navigate("Home");
+    //             } else {
+    //                 navigation.navigate("Verify");
+    //             }
+    //         }
+    //     })
+    //     return unsubscribe;
+    // }, []);
 
 
     const handleLogin = (credentials, setSubmitting) => {
@@ -47,6 +47,11 @@ const Login = () => {
                 const user = userCredential.user;
                 console.log("UID recieved from Firebase:");
                 console.log(user.uid);
+                if (user.emailVerified) {
+                    navigation.navigate("Home");
+                } else {
+                    navigation.navigate("Verify");
+                }
                 setSubmitting(false);
             })
             .catch((error) => {
@@ -85,7 +90,6 @@ const Login = () => {
                     initialValues={{ email: '', password: '' }}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                         handleLogin(values, setSubmitting);
-                        resetForm();
                     }}
                     validationSchema={loginSchema}
                 >

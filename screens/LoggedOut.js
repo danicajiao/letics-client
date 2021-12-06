@@ -17,7 +17,7 @@ const LoggedOut = () => {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
+            if (user && user.emailVerified) {
                 navigation.navigate("Home");
             }
         })

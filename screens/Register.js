@@ -7,7 +7,7 @@ import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { KeyboardAvoidingWrapper } from '../components/KeyboardAvoidingWrapper';
 import app from '../config/firebase';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, deleteUser } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as yup from 'yup';
@@ -22,20 +22,20 @@ const Register = () => {
     const auth = getAuth();
     const navigation = useNavigation();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                navigation.navigate("Verify");
-            }
-        })
-        return unsubscribe;
-    }, []);
+    // useEffect(() => {
+    //     const unsubscribe = auth.onAuthStateChanged(user => {
+    //         if (user && !user.emailVerified) {
+    //             navigation.navigate("Verify");
+    //         }
+    //     })
+    //     return unsubscribe;
+    // }, []);
 
     const handleRegister = (credentials, setSubmitting) => {
         const baseUrl = Constants.manifest.extra.testUrl;
 
-        console.log('Submitting to Firebase:');
-        console.log(credentials);
+        // console.log('Submitting to Firebase:');
+        // console.log(credentials);
 
         handleMessage(null);
 
@@ -43,14 +43,31 @@ const Register = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                console.log("UID recieved from Firebase:");
-                console.log(user.uid);
+                // console.log("UID recieved from Firebase:");
+                // console.log(user.uid);
                 const userObject = {
                     firebase_uid: user.uid,
                     workouts: []
                 }
-                console.log("Submitting to server:");
-                console.log(userObject);
+
+                updateProfile(auth.currentUser, { displayName: credentials.username })
+                    .then(() => {
+                        // Profile updated
+                        console.log(auth.currentUser.displayName);
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log(error);
+                        setSubmitting(false);
+                        // handleMessage("An error occured. Check your network and try again.");
+                        handleMessage(errorMessage);
+                    });
+
+
+
+                // console.log("Submitting to server:");
+                // console.log(userObject);
 
 
                 // Ensure that this points to the correct url when in testing or production
@@ -59,19 +76,32 @@ const Register = () => {
                         const result = response.data;
                         const { status, message, data, mongdb } = result;
 
-                        console.log("Recieved from server:");
-                        console.log(result);
+                        // console.log("Recieved from server:");
+                        // console.log(result);
 
                         if (status !== 'SUCCESS') {
                             handleMessage(message, status);
                         } else {
                             // TODO: Navigate to tabs
                         }
+
+                        if (user && !user.emailVerified) {
+                            navigation.navigate("Verify");
+                        }
                         setSubmitting(false);
                     })
                     .catch((error) => {
                         console.log("Failed submitting UID to server. Verify the POST requests and paths to the server.");
                         console.log(error);
+
+                        deleteUser(user)
+                            .then(() => {
+
+                            })
+                            .catch(() => {
+
+                            });
+
                         setSubmitting(false);
                         handleMessage("An error occured. Check your network and try again.");
                     });

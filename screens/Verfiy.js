@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native'
 import { getAuth, sendEmailVerification } from '@firebase/auth';
+import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Header } from '../components/Header'
 
@@ -50,6 +51,9 @@ const Verfiy = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Octicons name={'arrow-left'} size={40} style={styles.backIcon} />
+            </TouchableOpacity>
             <Header title={'Verify your Email'} />
             <View style={styles.content}>
                 <Text style={styles.textContainer}>
@@ -81,6 +85,10 @@ const styles = StyleSheet.create({
     },
     content: {
         paddingHorizontal: '5%'
+    },
+    backIcon: {
+        paddingLeft: 20,
+        paddingTop: 20
     },
     textContainer: {
         paddingVertical: '10%',
