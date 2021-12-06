@@ -1,10 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, StatusBar, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, StatusBar, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut, deleteUser } from "firebase/auth";
 import { Header } from './../components/Header'
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants'
+import axios from 'axios';
 
 const Profile = () => {
 
@@ -12,13 +14,27 @@ const Profile = () => {
     const navigation = useNavigation();
 
     const handleSignOut = () => {
-        auth
-            .signOut()
+        signOut(auth)
             .then(() => {
                 navigation.navigate("LoggedOut");
             })
             .catch(error => alert(error.message))
     }
+
+    const deactivateDialog = () =>
+        Alert.alert(
+            "Confirm Operation",
+            "Are you sure you want to deactivate your account? This cannot be undone.",
+            [
+                { text: "Cancel" },
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        navigation.navigate("Reauthenticate");
+                    },
+                }
+            ]
+        );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -35,6 +51,9 @@ const Profile = () => {
                 </View>
                 <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
                     <Text style={styles.buttonText}>LOG OUT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deactivateButton} onPress={deactivateDialog}>
+                    <Text style={styles.deactivateText}>DEACTIVATE ACCOUNT</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -72,9 +91,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 60,
         borderRadius: 5,
         backgroundColor: '#000000',
-        marginVertical: '5%'
+        marginVertical: '2%'
     },
     buttonText: {
+        color: '#ffffff',
+        fontWeight: 'bold'
+    },
+    deactivateButton: {
+        backgroundColor: 'red',
+        alignItems: "center",
+        // borderWidth: 2,
+        paddingVertical: 20,
+        paddingHorizontal: 60,
+        borderRadius: 5,
+        marginVertical: '5%'
+    },
+    deactivateText: {
         color: '#ffffff',
         fontWeight: 'bold'
     },
