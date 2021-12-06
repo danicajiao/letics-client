@@ -24,19 +24,19 @@ const Reauthenticate = () => {
         const baseUrl = Constants.manifest.extra.testUrl;
         const user = auth.currentUser;
 
-        deleteUser(user)
-            .then(() => {
-                axios.delete(baseUrl + 'users/' + user.uid + '/deactivate')
-                    .then((response) => {
-                        console.log(response.data);
-                        navigation.navigate("LoggedOut");
+        axios.delete(baseUrl + 'users/' + user.uid + '/deactivate')
+            .then((response) => {
+                console.log(response.data);
+                deleteUser(user)
+                    .then(() => {
                     })
-                    .catch((error) => {
-                        console.log("Request to server failed.");
-                        console.log(error);
-                    });
+                    .catch(error => alert(error.message))
+                navigation.navigate("LoggedOut");
             })
-            .catch(error => alert(error.message))
+            .catch((error) => {
+                console.log("Request to server failed.");
+                console.log(error);
+            });
     }
 
     const handleReauthenticate = (credentials, setSubmitting) => {
