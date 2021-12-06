@@ -25,7 +25,7 @@ function beginWeek() {
     let day = date.getDay() || 7;
     if (day !== 1)
         date.setHours(-24 * (day - 1));
-    return "Highlights for the week of " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+    return "Current Week is " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
 // get authentication info
@@ -33,62 +33,91 @@ const auth = getAuth();
 
 const handleGetWorkouts = () => {
     const baseUrl = Constants.manifest.extra.testUrl;
-    const uid = auth.currentUser.uid;
+    const uid = auth.currentUser.uid; 
+    let max_weight = [0, 0, 0]; // squat, bench, deadlift
+    let itemsTemp = [];
+    let sets = [];
+    
+    const info = () => {
+        const [workoutsArray, setWorkoutsArray] = useState([]);
 
-    axios.get(baseUrl + 'users/' + uid + '/workouts')
-        .then((response) => {
-            const itemsTemp = {}
+        axios.get(baseUrl + 'users/' + uid + '/workouts')
+            .then((response) => {
+                setWorkoutsArray(response.data);
+            })
+            .catch((error) => {
+                console.log("Failed to get from server. Verify the request and path to the server.");
+                console.log(error);
+            });
 
-            // the workout data
-            workoutsArray = response.data;
-            console.log(workoutsArray);
-            console.log("hello");
+        return workoutsArray;
+    }
 
-            for (let i = 0; i < workoutsArray.length; i++) {
-                // console.log(workoutsArray[i]);
-                if (!itemsTemp[workoutsArray[i].date]) {
-                    itemsTemp[workoutsArray[i].date] = [];
-                    itemsTemp[workoutsArray[i].date].push({
-                        workout_id: workoutsArray[i]._id,
-                        num_exercises: workoutsArray[i].exercises.length,
-                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
-                        // height: Math.max(50, Math.floor(Math.random() * 150))
-                    });
-                } else {
-                    itemsTemp[workoutsArray[i].date].push({
-                        workout_id: workoutsArray[i]._id,
-                        num_exercises: workoutsArray[i].exercises.length,
-                        name: 'Item for ' + workoutsArray[i].date + ' #' + i,
-                        // height: Math.max(50, Math.floor(Math.random() * 150))
-                    });
+    let workoutsArray = info();
+
+    // check for empty array
+    if (workoutsArray.length == 0) {
+        return max_weight;
+    }
+
+    for (let i = 0; i < workoutsArray.length; i++) {
+        // current list of exercises
+        itemsTemp = workoutsArray[i].exercises;
+
+        // loop through exercises searching for users current maxes
+        for (let j = 0; j < itemsTemp.length; j++) {
+            if (itemsTemp[j].name === "Bench Press") {
+                // check for highest weight acheived by user in bench
+                sets = itemsTemp[j].sets; 
+                for (let k = 0; k < sets.length; k++) {
+                    if (max_weight[1] <= sets[k].weight) {
+                        max_weight[1] = sets[k].weight; 
+                    }
                 }
             }
-        })
-        .catch((error) => {
-            console.log("Failed to get from server. Verify the request and path to the server.");
-            console.log(error);
-        });
+            else if (itemsTemp[j].name === "Squat") {
+                // check for highest weight acheived by user in squat
+                sets = itemsTemp[j].sets;
+                for (let k = 0; k < sets.length; k++) {
+                    if (max_weight[0] <= sets[k].weight) {
+                        max_weight[0] = sets[k].weight; 
+                    }
+                }
+            }
+            else if (itemsTemp[j].name === "Deadlift") {
+                // check for highest weight acheived by user in deadlift
+                sets = itemsTemp[j].sets;
+                for (let k = 0; k < sets.length; k++) {
+                    if (max_weight[2] <= sets[k].weight) {
+                        max_weight[2] = sets[k].weight; 
+                    }
+                }
+            }
+        }
+    }
+
+    return max_weight;
 }
 
 //Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
     const [chartParentWidth, setChartParentWidth] = useState(0);
+    let max_weight = handleGetWorkouts();
+    let data = {
+        labels: ['Squat', 'Bench press', 'Deadlift'],
+        datasets: [
+            {
+                data: max_weight, //max_weight,
+                strokeWidth: 2, // optional
+            },
+        ],
+    };
 
-    // test retrieval
-    //get_chart();
-    const auth = getAuth();
-    // console.log(auth.currentUser.uid);
-    // console.log(auth);
-
-    handleGetWorkouts();
-
-    // make sure to have these checks when there's no data
-    //if (this.state.datasource) {
-    //if (this.state.datasource.length) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle={'dark-content'} />
             <Header title={'Dashboard'} />
+            <SubHeader title={'Welcome Back!'} />
             <SubHeader title={beginWeek()} />
 
             <View
@@ -96,7 +125,7 @@ const Dashboard = () => {
                 style={styles.chartWrapper}
             >
                 <BarChart
-                    data={line}
+                    data={data}
                     width={chartParentWidth} // from react-native
                     height={450}
                     yAxisLabel={''}
@@ -112,7 +141,7 @@ const Dashboard = () => {
                     }}
                     bezier
                     style={{
-                        marginVertical: 60,//50,
+                        marginVertical: 10,//50,
                         // marginHorizontal: 15,
                         borderRadius: 16
                     }}
@@ -126,7 +155,7 @@ const Dashboard = () => {
 // sidenote: this is static data used for organzing how I want things to look
 // need to make it work with database
 const line = {
-    labels: ['Squat', 'Benchpress', 'Deadlift'],
+    labels: ['Squat', 'Bench press', 'Deadlift'],
     datasets: [
         {
             data: [175, 165, 180],
