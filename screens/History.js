@@ -26,7 +26,7 @@ const History = () => {
     useFocusEffect(
         React.useCallback(() => {
             // Do something when the screen is focused
-            console.log("Focused History")
+            // console.log("Focused History")
             handleGetWorkouts();
             // console.log(getCurrentDate())
             return () => {
@@ -57,54 +57,8 @@ const History = () => {
 
         axios.get(baseUrl + 'users/' + uid + '/workouts')
             .then((response) => {
-                // console.log("BEFORE OPERATIONS:")
-                // console.log(items);
-                // const itemCopy = { ...items };
-                // const itemsTemp = {}
-                // setCalendarItems(itemsTemp);
 
                 setWorkoutsArray(response.data);
-                // workoutsArray = response.data;
-
-                // console.log(workoutsArray);
-                // const { status, message, data, mongdb } = result;
-
-                // console.log("Recieved from server:");
-                // console.log(workoutsArray);
-
-                // for (let i = 0; i < workoutsArray.length; i++) {
-                //     // console.log(workoutsArray[i]);
-                //     if (!itemsTemp[workoutsArray[i].date]) {
-                //         itemsTemp[workoutsArray[i].date] = [];
-                //         itemsTemp[workoutsArray[i].date].push({
-                //             workoutId: workoutsArray[i]._id,
-                //             workoutIndex: i,
-                //             exercises: workoutsArray[i].exercises,
-                //             name: 'Item for ' + workoutsArray[i].date + ' #' + i,
-                //             // height: Math.max(50, Math.floor(Math.random() * 150))
-                //         });
-                //     } else {
-                //         itemsTemp[workoutsArray[i].date].push({
-                //             workoutId: workoutsArray[i]._id,
-                //             workoutIndex: i,
-                //             exercises: workoutsArray[i].exercises,
-                //             name: 'Item for ' + workoutsArray[i].date + ' #' + i,
-                //             // height: Math.max(50, Math.floor(Math.random() * 150))
-                //         });
-                //     }
-                // }
-
-                // // console.log("AFTER OPERATIONS:")
-                // // console.log(items);
-                // const newItems = {};
-                // // console.log(newItems)
-                // Object.keys(itemsTemp).forEach(key => {
-                //     newItems[key] = itemsTemp[key];
-                // });
-
-                // // console.log(newItems)
-                // setCalendarItems(newItems);
-                // setLoadingState(true);
             })
             .catch((error) => {
                 console.log("Failed to get from server. Verify the request and path to the server.");
