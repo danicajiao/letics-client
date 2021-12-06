@@ -33,7 +33,7 @@ const Register = () => {
 
     const handleRegister = (credentials, setSubmitting) => {
         const baseUrl = Constants.manifest.extra.testUrl;
-
+        console.log(baseUrl)
         // console.log('Submitting to Firebase:');
         // console.log(credentials);
 
