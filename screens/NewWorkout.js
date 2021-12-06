@@ -18,9 +18,9 @@ const NewWorkout = ({ navigation }) => {
     const deleteDialog = (navigation, handleReset) =>
         Alert.alert(
             "Confirm Operation",
-            "Are you sure you want to delete this workout?",
+            "Are you sure you want to cancel this workout?",
             [
-                { text: "Cancel" },
+                { text: "No" },
                 {
                     text: "Yes",
                     onPress: () => {
@@ -107,6 +107,7 @@ const NewWorkout = ({ navigation }) => {
                         console.log(values);
                         handleLog(values, setSubmitting);
                         resetForm();
+                        navigation.goBack();
                     }}
                     validationSchema={exerciseSchema}
                 >
@@ -128,7 +129,7 @@ const NewWorkout = ({ navigation }) => {
                             </Modal>
 
                             <TouchableOpacity onPress={() => { deleteDialog(navigation, handleReset); }}>
-                                <Octicons name={'arrow-left'} size={36} style={styles.backIcon} />
+                                <Octicons name={'x'} size={36} style={styles.backIcon} />
                             </TouchableOpacity>
                             <Header title={"New Workout"} />
 
