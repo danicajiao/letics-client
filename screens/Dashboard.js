@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
@@ -7,107 +7,39 @@ import { Octicons } from '@expo/vector-icons';
 import { Colors } from './../components/styles';
 import { Header } from './../components/Header';
 import { SubHeader } from '../components/SubHeader';
-import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-} from 'react-native-chart-kit'
+import { BarChart } from 'react-native-chart-kit'
 import axios from 'axios'; // for http request processing
 import { getAuth } from "firebase/auth";
-
-// beginning of current week
-function beginWeek() {
-    // cool calculation to get first day of week (anchor date)
-    let date = new Date();
-    let day = date.getDay() || 7;
-    if (day !== 1)
-        date.setHours(-24 * (day - 1));
-    return "Current Week is " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-}
-
-// get authentication info
-const auth = getAuth();
-
-const handleGetWorkouts = () => {
-    const baseUrl = Constants.manifest.extra.testUrl;
-    const uid = auth.currentUser.uid;
-    let max_weight = [0, 0, 0]; // squat, bench, deadlift
-    let itemsTemp = [];
-    let sets = [];
-
-    const info = () => {
-        const [workoutsArray, setWorkoutsArray] = useState([]);
-
-        axios.get(baseUrl + 'users/' + uid + '/workouts')
-            .then((response) => {
-                setWorkoutsArray(response.data);
-            })
-            .catch((error) => {
-                console.log("Failed to get from server. Verify the request and path to the server.");
-                console.log(error);
-            });
-
-        return workoutsArray;
-    }
-
-    let workoutsArray = info();
-
-    // check for empty array
-    if (workoutsArray.length == 0) {
-        return max_weight;
-    }
-
-    for (let i = 0; i < workoutsArray.length; i++) {
-        // current list of exercises
-        itemsTemp = workoutsArray[i].exercises;
-
-        // loop through exercises searching for users current maxes
-        for (let j = 0; j < itemsTemp.length; j++) {
-            if (itemsTemp[j].name === "Bench Press") {
-                // check for highest weight acheived by user in bench
-                sets = itemsTemp[j].sets;
-                for (let k = 0; k < sets.length; k++) {
-                    if (max_weight[1] <= sets[k].weight) {
-                        max_weight[1] = sets[k].weight;
-                    }
-                }
-            }
-            else if (itemsTemp[j].name === "Squat") {
-                // check for highest weight acheived by user in squat
-                sets = itemsTemp[j].sets;
-                for (let k = 0; k < sets.length; k++) {
-                    if (max_weight[0] <= sets[k].weight) {
-                        max_weight[0] = sets[k].weight;
-                    }
-                }
-            }
-            else if (itemsTemp[j].name === "Deadlift") {
-                // check for highest weight acheived by user in deadlift
-                sets = itemsTemp[j].sets;
-                for (let k = 0; k < sets.length; k++) {
-                    if (max_weight[2] <= sets[k].weight) {
-                        max_weight[2] = sets[k].weight;
-                    }
-                }
-            }
-        }
-    }
-
-    return max_weight;
-}
+import { useFocusEffect } from '@react-navigation/native';
 
 //Dashboard will be dynamic due to the linechart 
 const Dashboard = () => {
     const [chartParentWidth, setChartParentWidth] = useState(0);
-    let max_weight = handleGetWorkouts();
+    const [workoutsArray, setWorkoutsArray] = useState([]);
+    const [chartData, setChartData] = useState([0, 0, 0]);
+    // get authentication info
+    const auth = getAuth();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+            // console.log("Focused History")
+            const unsubscribe = handleGetWorkouts();
+            // console.log(getCurrentDate())
+            return unsubscribe;
+        }, [])
+    );
+
+    useEffect(() => {
+        const unsubscribe = constructChartData();
+        return unsubscribe;
+    }, [workoutsArray])
+
     let data = {
         labels: ['Squat', 'Bench Press', 'Deadlift'],
         datasets: [
             {
-                data: max_weight, //max_weight,
+                data: chartData, //max_weight,
                 // color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // optional
                 strokeWidth: 2, // optional
             },
@@ -122,8 +54,82 @@ const Dashboard = () => {
         style: {
             borderRadius: 16
         }
-
     };
+
+    // beginning of current week
+    function beginWeek() {
+        // cool calculation to get first day of week (anchor date)
+        let date = new Date();
+        let day = date.getDay() || 7;
+        if (day !== 1)
+            date.setHours(-24 * (day - 1));
+        return "Current Week is " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+    }
+
+    const handleGetWorkouts = () => {
+        const baseUrl = Constants.manifest.extra.testUrl;
+        const uid = auth.currentUser.uid;
+
+        axios.get(baseUrl + 'users/' + uid + '/workouts')
+            .then((response) => {
+                setWorkoutsArray(response.data)
+            })
+            .catch((error) => {
+                console.log("Failed to get from server. Verify the request and path to the server.");
+                console.log(error);
+            });
+    }
+
+    const constructChartData = () => {
+        let max_weight = [0, 0, 0]; // squat, bench, deadlift
+        let itemsTemp = [];
+        let sets = [];
+
+        // console.log(workoutsArray)
+
+        // check for empty array
+        if (workoutsArray.length == 0) {
+            setChartData(max_weight);
+        }
+
+        for (let i = 0; i < workoutsArray.length; i++) {
+            // current list of exercises
+            itemsTemp = workoutsArray[i].exercises;
+
+            // loop through exercises searching for users current maxes
+            for (let j = 0; j < itemsTemp.length; j++) {
+                if (itemsTemp[j].name === "Bench Press") {
+                    // check for highest weight acheived by user in bench
+                    sets = itemsTemp[j].sets;
+                    for (let k = 0; k < sets.length; k++) {
+                        if (max_weight[1] <= sets[k].weight) {
+                            max_weight[1] = sets[k].weight;
+                        }
+                    }
+                }
+                else if (itemsTemp[j].name === "Squat") {
+                    // check for highest weight acheived by user in squat
+                    sets = itemsTemp[j].sets;
+                    for (let k = 0; k < sets.length; k++) {
+                        if (max_weight[0] <= sets[k].weight) {
+                            max_weight[0] = sets[k].weight;
+                        }
+                    }
+                }
+                else if (itemsTemp[j].name === "Deadlift") {
+                    // check for highest weight acheived by user in deadlift
+                    sets = itemsTemp[j].sets;
+                    for (let k = 0; k < sets.length; k++) {
+                        if (max_weight[2] <= sets[k].weight) {
+                            max_weight[2] = sets[k].weight;
+                        }
+                    }
+                }
+            }
+        }
+
+        setChartData(max_weight);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -153,21 +159,6 @@ const Dashboard = () => {
         </SafeAreaView >
     );
 };
-
-// prototype plots for daily fluctuations in weight
-// sidenote: this is static data used for organzing how I want things to look
-// need to make it work with database
-const line = {
-    labels: ['Squat', 'Bench press', 'Deadlift'],
-    datasets: [
-        {
-            data: [175, 165, 180],
-            strokeWidth: 2, // optional
-        },
-    ],
-};
-
-const StatusBarHeight = Constants.statusBarHeight;
 
 const styles = StyleSheet.create({
     container: {

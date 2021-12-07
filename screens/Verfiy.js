@@ -13,7 +13,8 @@ const Verfiy = () => {
     const auth = getAuth();
 
     useEffect(() => {
-        sendEmail();
+        const unsubscribe = sendEmail();
+        return unsubscribe;
     }, []);
 
     const sendEmail = () => {
